@@ -1,0 +1,47 @@
+# Track The Newest Main Build
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-098-capstone-010"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+
+bootstrap:
+  init:
+    - name: "install-git-and-flux"
+      description: "Installs the Flux CLI 2.9.6, Gitea with the seeded fleet repository, the lab registry and Flux with the image controllers"
+      type: "file"
+      source: "bootstrap/01-install-git-and-flux.sh"
+    - name: "ats-098-capstone-010-setup"
+      description: "Seeds main and pull request build tags and an ImageRepository and ImagePolicy in Git with three faults"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+
+testing:
+  init:
+    - name: "wait-for-flux"
+      description: "Waits until Gitea, the lab registry and every Flux controller are ready"
+      type: "file"
+      source: "testing/wait-for-flux.sh"
+    - name: "reference-solution"
+      description: "The changes a correct learner makes, written to Git through the Gitea API; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+
+validation:
+  scripts:
+    - name: "validate-builds-scan"
+      description: "Confirms podinfo-builds comes from Git, is Ready and keeps main- tags"
+      type: "file"
+      source: "validation/validate-builds-scan.sh"
+    - name: "validate-newest-main-build"
+      description: "Adds a newer main build and a pull request build and confirms the policy follows the main build"
+      type: "file"
+      source: "validation/validate-newest-main-build.sh"
+
+teardown:
+  keepCluster: false

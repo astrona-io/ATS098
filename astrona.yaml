@@ -1,0 +1,276 @@
+# Course manifest for ATS098 - Image Automation & Progressive Delivery (FluxCD).
+#
+# One entry per section under `modules:`. Each section lists, in order: its
+# README, then for each module the landing page (course.md), its parts
+# (course-0N-*.md), and right after the part a lab tests, the lab's
+# question.md reading and the `type: lab` entry. The module's summary page
+# comes last. The section capstone closes the section. Playgrounds are not
+# listed: the landing page's playground marker shows them. solution.md is
+# never listed.
+#
+# Every `path:` is relative to this file.
+
+training:
+  id: ATS098
+  title: "FluxCD: Image Automation & Progressive Delivery"
+  maturity: draft
+  description: >
+    Training material covering the Image Automation & Progressive Delivery
+    domain of the FluxCD training path: scanning container registries with
+    ImageRepository, choosing tags with SemVer, numerical and alphabetical
+    ImagePolicies and tag filters, writing new tags back to Git with
+    ImageUpdateAutomation and setter markers, and rolling out new versions
+    gradually with Flagger canaries, A/B testing and metric analysis. Each
+    module pairs a layered reader with an ungraded hands-on playground and a
+    graded practice lab. Each section closes with an integration capstone.
+    Written for Flux v2.9.6 and Flagger 1.45.0.
+
+  certification:
+    name: FluxCD
+    code: FLUX
+    provider: Astrona
+    domain: Image Automation & Progressive Delivery
+    weight: 15
+
+modules:
+
+  - id: module-intro
+    title: "Introduction"
+    description: >
+      Start here. What this course trains you to do, how it is laid out, how
+      to get your machine ready with the astrona command-line tool, how the
+      content is written and checked, who maintains it, and how to report a
+      mistake.
+
+    content:
+      - type: reading
+        title: Introduction
+        path: sections/intro/README.md
+      - type: reading
+        title: "Welcome To The Course"
+        path: sections/intro/course-01-welcome.md
+      - type: reading
+        title: "Get Your Machine Ready"
+        path: sections/intro/course-02-get-your-machine-ready.md
+      - type: reading
+        title: "How This Course Is Made"
+        path: sections/intro/course-03-how-this-course-is-made.md
+
+  - id: module-010
+    title: "Scanning Image Registries"
+    description: >
+      How image-reflector-controller scans a container registry with an
+      ImageRepository, how an ImagePolicy chooses one tag with SemVer,
+      numerical or alphabetical ordering, and how tag filters and extraction
+      handle build tags that carry a commit and a timestamp.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-010/README.md
+
+      - type: reading
+        title: "Scan A Registry And Choose A Tag"
+        path: sections/section-010/module-01/course.md
+      - type: reading
+        title: "Scanning A Registry With ImageRepository"
+        path: sections/section-010/module-01/course-01-scanning-with-imagerepository.md
+      - type: reading
+        title: "Choosing A Tag With ImagePolicy"
+        path: sections/section-010/module-01/course-02-choosing-a-tag-with-imagepolicy.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Pick The Newest Stable Release Lab"
+        path: sections/section-010/module-01/labs/lab-01
+        difficulty: beginner
+        estimated_duration: 20m
+        topic: image-policies
+        task_kind: troubleshooting
+        tags: [imagepolicy, semver, alphabetical, imagerepository, flux-get, flux-reconcile]
+        learning_goals:
+          - Read which tag an ImagePolicy chose and why the choice is wrong
+          - Change the policy in Git so it picks the newest stable 6.x release and ignores release candidates
+          - Prove the policy follows a new stable tag and skips a new release candidate
+        resources:
+          - name: "ImagePolicy API"
+            url: https://fluxcd.io/flux/components/image/imagepolicies/
+          - name: "ImageRepository API"
+            url: https://fluxcd.io/flux/components/image/imagerepositories/
+      - type: reading
+        title: "Filtering And Extracting Build Tags"
+        path: sections/section-010/module-01/course-03-filtering-and-extracting-build-tags.md
+      - type: reading
+        title: Summary
+        path: sections/section-010/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-010/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Track The Newest Main Build Capstone"
+        path: sections/section-010/capstone/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: image-scanning
+        task_kind: troubleshooting
+        tags: [imagerepository, insecure-registry, filter-tags, numerical, exclusion-list, imagepolicy]
+        learning_goals:
+          - Find why a scan fails and why a policy chooses the wrong build tag
+          - Filter main-branch build tags and sort them by the timestamp they carry
+          - Prove the policy moves to a newer main build and ignores pull request builds
+        resources:
+          - name: "ImagePolicy API: filterTags"
+            url: https://fluxcd.io/flux/components/image/imagepolicies/
+          - name: "ImageRepository API: insecure and exclusionList"
+            url: https://fluxcd.io/flux/components/image/imagerepositories/
+          - name: "Automate image updates to Git"
+            url: https://fluxcd.io/flux/guides/image-update/
+
+  - id: module-020
+    title: "Automated Git Write-Backs"
+    description: >
+      How setter markers tell Flux which YAML field to change, how
+      ImageUpdateAutomation clones the repository, writes the new tag,
+      commits and pushes, and how the commit author, message template and
+      push branch shape the history that automation leaves in Git.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-020/README.md
+
+      - type: reading
+        title: "Write New Image Tags Back To Git"
+        path: sections/section-020/module-01/course.md
+      - type: reading
+        title: "Marking Fields With Setter Markers"
+        path: sections/section-020/module-01/course-01-setter-markers.md
+      - type: reading
+        title: "ImageUpdateAutomation And The Release Loop"
+        path: sections/section-020/module-01/course-02-image-update-automation.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Automate The podinfo Release Lab"
+        path: sections/section-020/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: image-automation
+        task_kind: build
+        tags: [imageupdateautomation, setter-marker, git-write-back, imagepolicy, kustomization, flux-reconcile]
+        learning_goals:
+          - Mark the podinfo tag in Git with a setter marker that names the right policy
+          - Commit an ImageUpdateAutomation that writes new tags to main with a fixed author
+          - Prove a new tag in the registry becomes a commit in Git and a running Deployment
+        resources:
+          - name: "ImageUpdateAutomation API"
+            url: https://fluxcd.io/flux/components/image/imageupdateautomations/
+          - name: "Automate image updates to Git"
+            url: https://fluxcd.io/flux/guides/image-update/
+      - type: reading
+        title: "Commit Messages, Authors And Branches"
+        path: sections/section-020/module-01/course-03-commits-authors-and-branches.md
+      - type: reading
+        title: Summary
+        path: sections/section-020/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-020/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Repair A Release Loop That Never Commits Capstone"
+        path: sections/section-020/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: image-automation
+        task_kind: troubleshooting
+        tags: [imageupdateautomation, setter-marker, push-branch, git-write-back, insecure-registry, flux-get]
+        learning_goals:
+          - Follow a new tag through the scan, the policy, the automation and Git to find where it stops
+          - Fix the registry access, the setter marker, the update path and the push branch
+          - Prove a new tag reaches main and the running Deployment without a manual edit
+        resources:
+          - name: "ImageUpdateAutomation API"
+            url: https://fluxcd.io/flux/components/image/imageupdateautomations/
+          - name: "ImageRepository API"
+            url: https://fluxcd.io/flux/components/image/imagerepositories/
+          - name: "Automate image updates to Git"
+            url: https://fluxcd.io/flux/guides/image-update/
+
+  - id: module-030
+    title: "Progressive Delivery With Flagger"
+    description: >
+      How Flagger runs a new version next to the old one behind
+      ingress-nginx, shifts traffic step by step while it checks metrics, and
+      promotes or rolls back; the Canary resource and its analysis; load
+      tests; A/B testing with headers and cookies; blue/green; and custom
+      Prometheus metrics.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-030/README.md
+
+      - type: reading
+        title: "Roll Out Releases Gradually With Flagger"
+        path: sections/section-030/module-01/course.md
+      - type: reading
+        title: "Flagger And The Canary Resource"
+        path: sections/section-030/module-01/course-01-flagger-and-the-canary-resource.md
+      - type: reading
+        title: "Canary Analysis, Promotion And Rollback"
+        path: sections/section-030/module-01/course-02-canary-analysis-promotion-and-rollback.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Promote A New Version Through A Canary Lab"
+        path: sections/section-030/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: progressive-delivery
+        task_kind: build
+        tags: [flagger, canary, canary-analysis, load-tester, ingress-nginx, kustomization]
+        learning_goals:
+          - Write a Canary for podinfo in Git with the analysis the task asks for
+          - Release a new podinfo version through Git and follow the analysis
+          - Prove the canary was promoted and the primary runs the new version
+        resources:
+          - name: "Flagger: NGINX canary deployments"
+            url: https://docs.flagger.app/tutorials/nginx-progressive-delivery
+          - name: "Flagger: deployment strategies"
+            url: https://docs.flagger.app/usage/deployment-strategies
+          - name: "Flagger: webhooks"
+            url: https://docs.flagger.app/usage/webhooks
+      - type: reading
+        title: "A/B Testing, Blue/Green And Custom Metrics"
+        path: sections/section-030/module-01/course-03-ab-testing-blue-green-and-metrics.md
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-030/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Ship A Release From Registry To Primary Capstone"
+        path: sections/section-030/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 45m
+        topic: progressive-delivery
+        task_kind: troubleshooting
+        tags: [imageupdateautomation, imagepolicy, canary, canary-analysis, load-tester, git-write-back]
+        learning_goals:
+          - Follow a release from the registry through Git to Flagger and find each place it stops
+          - Fix the policy range, the automation path and the canary load test
+          - Prove a new tag in the registry is promoted to the primary by Flagger
+        resources:
+          - name: "Automate image updates to Git"
+            url: https://fluxcd.io/flux/guides/image-update/
+          - name: "Flagger: NGINX canary deployments"
+            url: https://docs.flagger.app/tutorials/nginx-progressive-delivery
+          - name: "Flagger: metrics analysis"
+            url: https://docs.flagger.app/usage/metrics

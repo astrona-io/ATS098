@@ -1,0 +1,22 @@
+# The router entry for podinfo. Flagger creates the Service podinfo it points
+# at, and a second Ingress, podinfo-canary, for the canary traffic.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: podinfo
+  namespace: podinfo
+  labels:
+    app: podinfo
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: podinfo
+                port:
+                  number: 9898

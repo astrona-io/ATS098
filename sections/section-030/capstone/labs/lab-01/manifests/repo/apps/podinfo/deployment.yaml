@@ -1,0 +1,31 @@
+# No `replicas` field: Flagger scales this Deployment, so Git must not own the field.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podinfo
+  namespace: podinfo
+  labels:
+    app: podinfo
+spec:
+  selector:
+    matchLabels:
+      app: podinfo
+  template:
+    metadata:
+      labels:
+        app: podinfo
+    spec:
+      containers:
+        - name: podinfo
+          # The tag is set by images[].newTag in kustomization.yaml.
+          image: ghcr.io/stefanprodan/podinfo:6.14.0
+          env:
+            - name: PODINFO_UI_MESSAGE
+              value: "released by Flux"
+          ports:
+            - name: http
+              containerPort: 9898
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http

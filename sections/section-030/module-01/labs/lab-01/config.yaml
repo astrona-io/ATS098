@@ -1,0 +1,51 @@
+# Promote A New Version Through A Canary
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-098-lab-030-01"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+
+bootstrap:
+  init:
+    - name: "install-git-and-flux"
+      description: "Installs the Flux CLI 2.9.6, Gitea with the seeded fleet repository, the lab registry and Flux with the image controllers"
+      type: "file"
+      source: "bootstrap/01-install-git-and-flux.sh"
+    - name: "ats-098-lab-030-01-setup"
+      description: "Installs ingress-nginx, Flagger and the load tester through Flux and runs podinfo 6.14.0 without a Canary"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+
+testing:
+  init:
+    - name: "wait-for-flux"
+      description: "Waits until Gitea, the lab registry and every Flux controller are ready"
+      type: "file"
+      source: "testing/wait-for-flux.sh"
+    - name: "reference-solution"
+      description: "The changes a correct learner makes, written to Git through the Gitea API; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+
+validation:
+  scripts:
+    - name: "validate-canary-in-git"
+      description: "Confirms the Canary podinfo comes from Git with the requested analysis"
+      type: "file"
+      source: "validation/validate-canary-in-git.sh"
+    - name: "validate-release-in-git"
+      description: "Confirms Git asks for podinfo 6.14.1"
+      type: "file"
+      source: "validation/validate-release-in-git.sh"
+    - name: "validate-canary-promoted"
+      description: "Confirms Flagger promoted 6.14.1 to podinfo-primary"
+      type: "file"
+      source: "validation/validate-canary-promoted.sh"
+
+teardown:
+  keepCluster: false

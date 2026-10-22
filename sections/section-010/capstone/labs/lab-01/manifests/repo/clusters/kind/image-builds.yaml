@@ -1,0 +1,25 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: podinfo-builds
+  namespace: flux-system
+spec:
+  image: registry.localtest.me:5000/podinfo-builds
+  interval: 1m
+  exclusionList:
+    - '^.*\.sig$'
+    - '^main-.*'
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: podinfo-main
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: podinfo-builds
+  filterTags:
+    pattern: '^main-[a-f0-9]+-[0-9]+$'
+  policy:
+    numerical:
+      order: asc

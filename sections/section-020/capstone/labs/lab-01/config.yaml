@@ -1,0 +1,55 @@
+# Repair A Release Loop That Never Commits
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-098-capstone-020"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+
+bootstrap:
+  init:
+    - name: "install-git-and-flux"
+      description: "Installs the Flux CLI 2.9.6, Gitea with the seeded fleet repository, the lab registry and Flux with the image controllers"
+      type: "file"
+      source: "bootstrap/01-install-git-and-flux.sh"
+    - name: "ats-098-capstone-020-setup"
+      description: "Seeds a release loop in Git with four faults between the registry and the commit"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+
+testing:
+  init:
+    - name: "wait-for-flux"
+      description: "Waits until Gitea, the lab registry and every Flux controller are ready"
+      type: "file"
+      source: "testing/wait-for-flux.sh"
+    - name: "reference-solution"
+      description: "The changes a correct learner makes, written to Git through the Gitea API; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+
+validation:
+  scripts:
+    - name: "validate-scan-ready"
+      description: "Confirms the ImageRepository podinfo scans the lab registry"
+      type: "file"
+      source: "validation/validate-scan-ready.sh"
+    - name: "validate-marker-in-git"
+      description: "Confirms the setter marker names flux-system:podinfo:tag"
+      type: "file"
+      source: "validation/validate-marker-in-git.sh"
+    - name: "validate-automation-in-git"
+      description: "Confirms the automation author, push branch and update path"
+      type: "file"
+      source: "validation/validate-automation-in-git.sh"
+    - name: "validate-release-loop"
+      description: "Adds podinfo 6.15.0 and follows it to a commit by fluxcdbot and the running Deployment"
+      type: "file"
+      source: "validation/validate-release-loop.sh"
+
+teardown:
+  keepCluster: false
