@@ -9,7 +9,6 @@ metadata:
     question: "question.md"
     examQuestion: "question.md"
     prerequisites: "prerequisites.md"
-
 bootstrap:
   init:
     - name: "install-git-and-flux"
@@ -20,7 +19,6 @@ bootstrap:
       description: "Seeds the registry tags and an ImagePolicy in Git that picks the wrong tag"
       type: "file"
       source: "bootstrap/02-seed-state.sh"
-
 testing:
   init:
     - name: "wait-for-flux"
@@ -31,7 +29,6 @@ testing:
       description: "The changes a correct learner makes, written to Git through the Gitea API; used by `astrona test`"
       type: "file"
       source: "solution/apply.sh"
-
 validation:
   scripts:
     - name: "validate-policy-in-git"
@@ -42,6 +39,14 @@ validation:
       description: "Adds 6.15.1, 6.16.0-rc.2 and 7.0.0 and confirms the policy chooses 6.15.1"
       type: "file"
       source: "validation/validate-policy-follows-releases.sh"
-
 teardown:
   keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.14.0
+      - gitea/gitea:28.2.0-rootless
+      - nicolaka/netshoot:v0.13
+      - regclient/regctl:v0.11.6-alpine
+      - registry.localtest.me:5000
+      - registry:2.8.3
