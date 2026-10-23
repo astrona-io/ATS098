@@ -27,5 +27,4 @@ runtime:
       - gitea/gitea:28.2.0-rootless
       - nicolaka/netshoot:v0.13
       - regclient/regctl:v0.11.6-alpine
-      - registry.localtest.me:5000
       - registry:2.8.3
