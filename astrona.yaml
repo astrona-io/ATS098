@@ -29,8 +29,6 @@ training:
     name: FluxCD
     code: FLUX
     provider: Astrona
-    domain: Image Automation & Progressive Delivery
-    weight: 15
 
 modules:
 
