@@ -1,0 +1,245 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats098-030
+course_id: ATS098
+exam_code: FLUX
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-030
+  title: "Progressive Delivery With Flagger"
+placement:
+  position: after
+  reading: sections/section-030/capstone/labs/lab-01/question.md
+questions:
+  - id: ats098-030-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain how Flagger shifts traffic with nginx"
+    source_readings:
+      - sections/section-030/module-01/course-01-flagger-and-the-canary-resource.md
+    prompt: "With `provider: nginx`, how does Flagger shift traffic to a new version?"
+    options:
+      - id: a
+        text: "It proxies every request itself"
+        explanation: "Not correct. Flagger does not handle user requests."
+      - id: b
+        text: "It edits the iptables rules on each node"
+        explanation: "Not correct. Flagger works through the Ingress."
+      - id: c
+        text: "It changes the weight of a canary Ingress that ingress-nginx uses"
+        explanation: "Correct. Flagger tells the router the share. The router sends the requests."
+      - id: d
+        text: "It scales the old Deployment down in steps"
+        explanation: "Not correct. Scaling does not set a share of requests."
+    correct_option: c
+    explanation: "Correct. Flagger tells the router the share. The router sends the requests."
+
+  - id: ats098-030-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name where the success rate comes from"
+    source_readings:
+      - sections/section-030/module-01/course-01-flagger-and-the-canary-resource.md
+    prompt: "Where does Flagger get the request counts for `request-success-rate` in this course?"
+    options:
+      - id: a
+        text: "From Prometheus, which collects the request counts of ingress-nginx"
+        explanation: "Correct. The Flagger chart installs `flagger-prometheus` for this."
+      - id: b
+        text: "From the Pod logs of the canary"
+        explanation: "Not correct. Flagger does not parse logs."
+      - id: c
+        text: "From the ImagePolicy status"
+        explanation: "Not correct. A policy knows tags, not requests."
+      - id: d
+        text: "From the Flux notification controller"
+        explanation: "Not correct. That controller sends alerts and does not measure requests."
+    correct_option: a
+    explanation: "Correct. The Flagger chart installs `flagger-prometheus` for this."
+
+  - id: ats098-030-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name an object that Flagger creates"
+    source_readings:
+      - sections/section-030/module-01/course-01-flagger-and-the-canary-resource.md
+    prompt: "Which object does Flagger create when it takes over the Deployment `podinfo`?"
+    options:
+      - id: a
+        text: "The Deployment `podinfo-stable`"
+        explanation: "Not correct. Flagger names the copy `-primary`."
+      - id: b
+        text: "The HelmRelease `podinfo-canary`"
+        explanation: "Not correct. Flagger creates Services, a Deployment and an Ingress, not a HelmRelease."
+      - id: c
+        text: "The GitRepository `podinfo-primary`"
+        explanation: "Not correct. Flagger does not create Flux source objects."
+      - id: d
+        text: "The Deployment `podinfo-primary`"
+        explanation: "Correct. It is a copy of `podinfo` that serves all traffic."
+    correct_option: d
+    explanation: "Correct. It is a copy of `podinfo` that serves all traffic."
+
+  - id: ats098-030-q04
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know why Git holds no Service or replicas"
+    source_readings:
+      - sections/section-030/module-01/course-01-flagger-and-the-canary-resource.md
+    prompt: "Why does Git hold no Service `podinfo` and no `replicas` field for the Deployment `podinfo`?"
+    options:
+      - id: a
+        text: "Kubernetes does not allow Services and replicas in Git"
+        explanation: "Not correct. They are valid fields. Ownership is the issue."
+      - id: b
+        text: "Flagger owns the Service and scales the Deployment, so a second owner in Git would fight it"
+        explanation: "Correct. Flux would set the values back after each change by Flagger."
+      - id: c
+        text: "The Canary reads them from the Ingress"
+        explanation: "Not correct. The Canary does not read them from the Ingress."
+      - id: d
+        text: "Flux never applies Services"
+        explanation: "Not correct. Flux applies any object in the path."
+    correct_option: b
+    explanation: "Correct. Flux would set the values back after each change by Flagger."
+
+  - id: ats098-030-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Know what starts an analysis"
+    source_readings:
+      - sections/section-030/module-01/course-02-canary-analysis-promotion-and-rollback.md
+    prompt: "What starts a Flagger analysis?"
+    options:
+      - id: a
+        text: "A change to the pod template of the target Deployment, such as a new image tag"
+        explanation: "Correct. A change to the Canary alone does not start one."
+      - id: b
+        text: "Any change to the Canary object"
+        explanation: "Not correct. Only a change to the target Deployment starts it."
+      - id: c
+        text: "A new commit anywhere in the repository"
+        explanation: "Not correct. Only a changed pod template matters."
+      - id: d
+        text: "Creating the Ingress `podinfo-canary`"
+        explanation: "Not correct. Flagger creates that Ingress itself."
+    correct_option: a
+    explanation: "Correct. A change to the Canary alone does not start one."
+
+  - id: ats098-030-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Calculate the traffic steps"
+    source_readings:
+      - sections/section-030/module-01/course-02-canary-analysis-promotion-and-rollback.md
+    prompt: "A Canary has `stepWeight: 25` and `maxWeight: 50`. Which canary weights does a good release pass before the promotion?"
+    options:
+      - id: a
+        text: "50 only"
+        explanation: "Not correct. The weight rises by `stepWeight` each check."
+      - id: b
+        text: "25, 50, 75, then 100"
+        explanation: "Not correct. The weight stops at `maxWeight`."
+      - id: c
+        text: "25, then 50"
+        explanation: "Correct. When `maxWeight` is reached, Flagger promotes."
+      - id: d
+        text: "10, 20, 30, 40, then 50"
+        explanation: "Not correct. The step is 25, not 10."
+    correct_option: c
+    explanation: "Correct. When `maxWeight` is reached, Flagger promotes."
+
+  - id: ats098-030-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain threshold and rollback"
+    source_readings:
+      - sections/section-030/module-01/course-02-canary-analysis-promotion-and-rollback.md
+    prompt: "A Canary has `threshold: 5`. A release fails the metric check five times. What happens, and what does Git say afterwards?"
+    options:
+      - id: a
+        text: "Flagger rolls back and reverts the commit in Git"
+        explanation: "Not correct. Flagger never writes to Git."
+      - id: b
+        text: "Flagger rolls back and the primary keeps the old version; Git still names the new version"
+        explanation: "Correct. Flagger does not change Git."
+      - id: c
+        text: "Flagger promotes the release anyway"
+        explanation: "Not correct. Reaching the threshold ends the release as failed."
+      - id: d
+        text: "Flagger waits and retries forever"
+        explanation: "Not correct. The threshold ends the analysis."
+    correct_option: b
+    explanation: "Correct. Flagger does not change Git."
+
+  - id: ats098-030-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the A/B testing fields"
+    source_readings:
+      - sections/section-030/module-01/course-03-ab-testing-blue-green-and-metrics.md
+    prompt: "Which `analysis` fields make a Canary an A/B test?"
+    options:
+      - id: a
+        text: "`stepWeight` and `maxWeight`"
+        explanation: "Not correct. Those fields give a weighted canary release."
+      - id: b
+        text: "`threshold` and `interval` only"
+        explanation: "Not correct. They exist in every strategy."
+      - id: c
+        text: "`mirror` and `webhooks` only"
+        explanation: "Not correct. `mirror` sets mirroring and needs a router that supports it."
+      - id: d
+        text: "`iterations` and `match`"
+        explanation: "Correct. Only requests that match a header or cookie reach the canary."
+    correct_option: d
+    explanation: "Correct. Only requests that match a header or cookie reach the canary."
+
+  - id: ats098-030-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Describe blue/green traffic"
+    source_readings:
+      - sections/section-030/module-01/course-03-ab-testing-blue-green-and-metrics.md
+    prompt: "In a blue/green Canary, who receives the new version while it is tested?"
+    options:
+      - id: a
+        text: "A growing random share of all users"
+        explanation: "Not correct. That describes the canary release."
+      - id: b
+        text: "Only users who send a matching header"
+        explanation: "Not correct. That describes A/B testing."
+      - id: c
+        text: "Nobody except the test webhooks, then all users switch at once"
+        explanation: "Correct. There is no `match`, so users stay on the old version until the promotion."
+      - id: d
+        text: "Half of the users for the whole test"
+        explanation: "Not correct. Blue/green has no user share."
+    correct_option: c
+    explanation: "Correct. There is no `match`, so users stay on the old version until the promotion."
+
+  - id: ats098-030-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Set the limit of a custom latency metric"
+    source_readings:
+      - sections/section-030/module-01/course-03-ab-testing-blue-green-and-metrics.md
+    prompt: "A MetricTemplate returns the 99th percentile request duration in seconds. Which `thresholdRange` fails a canary that is too slow?"
+    options:
+      - id: a
+        text: "`max: 0.5`"
+        explanation: "Correct. Latency needs a maximum. A higher value fails the check."
+      - id: b
+        text: "`min: 0.5`"
+        explanation: "Not correct. A minimum would fail fast responses."
+      - id: c
+        text: "`min: 99`"
+        explanation: "Not correct. That value fits a success rate in percent."
+      - id: d
+        text: "`stepWeight: 0.5`"
+        explanation: "Not correct. That is not a `thresholdRange` field."
+    correct_option: a
+    explanation: "Correct. Latency needs a maximum. A higher value fails the check."

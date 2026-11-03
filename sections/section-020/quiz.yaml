@@ -1,0 +1,245 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats098-020
+course_id: ATS098
+exam_code: FLUX
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-020
+  title: "Automated Git Write-Backs"
+placement:
+  position: after
+  reading: sections/section-020/capstone/labs/lab-01/question.md
+questions:
+  - id: ats098-020-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Define a setter marker"
+    source_readings:
+      - sections/section-020/module-01/course-01-setter-markers.md
+    prompt: "What is a setter marker?"
+    options:
+      - id: a
+        text: "A Kubernetes annotation on the Deployment"
+        explanation: "Not correct. A marker is a comment in a YAML file in Git."
+      - id: b
+        text: "A YAML comment at the end of a line that holds a JSON object with the key `$imagepolicy`"
+        explanation: "Correct. The automation controller reads it and replaces the value on that line."
+      - id: c
+        text: "A field in the ImagePolicy spec"
+        explanation: "Not correct. The marker is in the file that is changed, not in the policy."
+      - id: d
+        text: "A label that Flux adds to the Pod"
+        explanation: "Not correct. Markers live in Git files, not on cluster objects."
+    correct_option: b
+    explanation: "Correct. The automation controller reads it and replaces the value on that line."
+
+  - id: ats098-020-q02
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the marker form that writes only the tag"
+    source_readings:
+      - sections/section-020/module-01/course-01-setter-markers.md
+    prompt: "Which marker makes the automation write only the tag of the policy `podinfo` in `flux-system`?"
+    options:
+      - id: a
+        text: "`# {\"$imagepolicy\": \"flux-system:podinfo\"}`"
+        explanation: "Not correct. Without a suffix the full reference is written."
+      - id: b
+        text: "`# {\"$imagepolicy\": \"flux-system:podinfo:name\"}`"
+        explanation: "Not correct. The `:name` suffix writes the image name only."
+      - id: c
+        text: "`# {\"$imagepolicy\": \"flux-system:podinfo:digest\"}`"
+        explanation: "Not correct. The `:digest` suffix writes the digest and needs `digestReflectionPolicy`."
+      - id: d
+        text: "`# {\"$imagepolicy\": \"flux-system:podinfo:tag\"}`"
+        explanation: "Correct. The `:tag` suffix writes the tag only."
+    correct_option: d
+    explanation: "Correct. The `:tag` suffix writes the tag only."
+
+  - id: ats098-020-q03
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Explain why the tag-only form fits the lab"
+    source_readings:
+      - sections/section-020/module-01/course-01-setter-markers.md
+    prompt: "The policy scans the lab registry, but the cluster pulls from `ghcr.io/stefanprodan/podinfo`. Why does the lab use the `:tag` marker on `newTag`?"
+    options:
+      - id: a
+        text: "The full form is not allowed in a Kustomize file"
+        explanation: "Not correct. The reason is the registry name, not the file type."
+      - id: b
+        text: "The `:tag` form makes the scan faster"
+        explanation: "Not correct. Markers have no effect on the scan."
+      - id: c
+        text: "The full form would write the lab registry name into the file and the cluster could not pull from it"
+        explanation: "Correct. Only the tag must change."
+      - id: d
+        text: "The `:tag` form is the only one that works without an ImageUpdateAutomation"
+        explanation: "Not correct. Every form needs an ImageUpdateAutomation."
+    correct_option: c
+    explanation: "Correct. Only the tag must change."
+
+  - id: ats098-020-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Know that a marker alone changes nothing"
+    source_readings:
+      - sections/section-020/module-01/course-01-setter-markers.md
+    prompt: "A setter marker is committed, and no ImageUpdateAutomation exists. What happens when the policy chooses a new tag?"
+    options:
+      - id: a
+        text: "Nothing. The marker is a comment until an ImageUpdateAutomation covers its file"
+        explanation: "Correct. Neither Kubernetes nor Kustomize reads the comment."
+      - id: b
+        text: "Kustomize writes the new tag into the file"
+        explanation: "Not correct. Kustomize does not read the marker."
+      - id: c
+        text: "The image reflector controller commits the new tag"
+        explanation: "Not correct. It scans and chooses. It does not write to Git."
+      - id: d
+        text: "The Deployment restarts with the new tag"
+        explanation: "Not correct. The cluster follows Git, and Git did not change."
+    correct_option: a
+    explanation: "Correct. Neither Kubernetes nor Kustomize reads the comment."
+
+  - id: ats098-020-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Spot a marker that names no policy"
+    source_readings:
+      - sections/section-020/module-01/course-01-setter-markers.md
+    prompt: "A marker names a policy that does not exist, for example because of a typo. What does the automation do with that line?"
+    options:
+      - id: a
+        text: "It writes the latest tag of the registry"
+        explanation: "Not correct. Without a policy, there is no choice to write."
+      - id: b
+        text: "It deletes the line"
+        explanation: "Not correct. The automation only replaces values of valid markers."
+      - id: c
+        text: "It stops Flux from reconciling the Kustomization"
+        explanation: "Not correct. The automation does not affect other controllers."
+      - id: d
+        text: "It leaves the line alone, without an error that stops the run"
+        explanation: "Correct. The value stays as it is, so the typo is easy to miss."
+    correct_option: d
+    explanation: "Correct. The value stays as it is, so the typo is easy to miss."
+
+  - id: ats098-020-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Order the steps of an ImageUpdateAutomation run"
+    source_readings:
+      - sections/section-020/module-01/course-02-image-update-automation.md
+    prompt: "Which order describes one run of the image automation controller?"
+    options:
+      - id: a
+        text: "Find markers, clone the branch, push, then commit"
+        explanation: "Not correct. The controller needs the files before it can find markers, and it commits before it pushes."
+      - id: b
+        text: "Clone the branch, find markers under `update.path`, replace the values, commit if a file changed, push"
+        explanation: "Correct. A run without changes makes no commit."
+      - id: c
+        text: "Scan the registry, choose a tag, replace the values, apply to the cluster"
+        explanation: "Not correct. Scanning belongs to the reflector controller and applying to Flux."
+      - id: d
+        text: "Commit, replace the values, clone the branch, push"
+        explanation: "Not correct. It must clone before it can change anything."
+    correct_option: b
+    explanation: "Correct. A run without changes makes no commit."
+
+  - id: ats098-020-q07
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Diagnose an update.path that misses the file"
+    source_readings:
+      - sections/section-020/module-01/course-02-image-update-automation.md
+    prompt: "`update.path` points at a folder that does not contain the marked file. What is the result?"
+    options:
+      - id: a
+        text: "The controller finds no markers and never commits"
+        explanation: "Correct. The path is relative to the repository root."
+      - id: b
+        text: "The controller searches the whole repository anyway"
+        explanation: "Not correct. It searches only under `update.path`."
+      - id: c
+        text: "The controller commits an empty change"
+        explanation: "Not correct. It commits only when a file changed."
+      - id: d
+        text: "The controller creates the missing file"
+        explanation: "Not correct. It only edits existing marked values."
+    correct_option: a
+    explanation: "Correct. The path is relative to the repository root."
+
+  - id: ats098-020-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Run the release loop by hand"
+    source_readings:
+      - sections/section-020/module-01/course-02-image-update-automation.md
+    prompt: "Which commands, in order, move a new registry tag to a rollout without waiting for intervals?"
+    options:
+      - id: a
+        text: "`flux reconcile kustomization --with-source`, then `flux reconcile image update`, then `flux reconcile image repository`"
+        explanation: "Not correct. The order is reversed. The commit does not exist before the scan."
+      - id: b
+        text: "`flux reconcile image update` only"
+        explanation: "Not correct. The scan and the apply still wait for their intervals."
+      - id: c
+        text: "`flux reconcile image repository`, then `flux reconcile image update`, then `flux reconcile kustomization --with-source`"
+        explanation: "Correct. They follow the loop: scan, commit, apply."
+      - id: d
+        text: "`kubectl rollout restart` on the Deployment"
+        explanation: "Not correct. The Deployment image comes from Git, so a restart changes nothing."
+    correct_option: c
+    explanation: "Correct. They follow the loop: scan, commit, apply."
+
+  - id: ats098-020-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use push.branch for reviewed releases"
+    source_readings:
+      - sections/section-020/module-01/course-03-commits-authors-and-branches.md
+    prompt: "The automation checks out `main` and has `push.branch: image-updates`. When does a new tag reach the cluster?"
+    options:
+      - id: a
+        text: "Immediately, because the automation commits"
+        explanation: "Not correct. Flux does not apply the branch `image-updates`."
+      - id: b
+        text: "After someone merges `image-updates` into `main`, because Flux applies `main`"
+        explanation: "Correct. Until the merge, the release waits in the branch."
+      - id: c
+        text: "Never, because pushing to another branch is not allowed"
+        explanation: "Not correct. It is allowed and used for review."
+      - id: d
+        text: "After the next scan of the registry"
+        explanation: "Not correct. A scan does not merge branches."
+    correct_option: b
+    explanation: "Correct. Until the merge, the release waits in the branch."
+
+  - id: ats098-020-q10
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Avoid the removed .Updated template field"
+    source_readings:
+      - sections/section-020/module-01/course-03-commits-authors-and-branches.md
+    prompt: "A commit message template uses `.Updated` and fails. Which field replaces it in the current Flux version?"
+    options:
+      - id: a
+        text: "`.Values`"
+        explanation: "Not correct. It holds extra values you set yourself."
+      - id: b
+        text: "`.AutomationObject`"
+        explanation: "Not correct. It holds the namespace and name of the automation."
+      - id: c
+        text: "`.Diff`"
+        explanation: "Not correct. No such field exists."
+      - id: d
+        text: "`.Changed`"
+        explanation: "Correct. `.Changed.FileChanges`, `.Changed.Objects` and `.Changed.Changes` hold what changed."
+    correct_option: d
+    explanation: "Correct. `.Changed.FileChanges`, `.Changed.Objects` and `.Changed.Changes` hold what changed."

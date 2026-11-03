@@ -125,6 +125,10 @@ modules:
             url: https://fluxcd.io/flux/components/image/imagerepositories/
           - name: "Automate image updates to Git"
             url: https://fluxcd.io/flux/guides/image-update/
+      - type: quiz
+        title: "Knowledge Check: Scanning Image Registries"
+        path: sections/section-010/quiz.yaml
+        pass_score: 70
 
   - id: module-020
     title: "Automated Git Write-Backs"
@@ -197,6 +201,10 @@ modules:
             url: https://fluxcd.io/flux/components/image/imagerepositories/
           - name: "Automate image updates to Git"
             url: https://fluxcd.io/flux/guides/image-update/
+      - type: quiz
+        title: "Knowledge Check: Automated Git Write-Backs"
+        path: sections/section-020/quiz.yaml
+        pass_score: 70
 
   - id: module-030
     title: "Progressive Delivery With Flagger"
@@ -272,3 +280,11 @@ modules:
             url: https://docs.flagger.app/tutorials/nginx-progressive-delivery
           - name: "Flagger: metrics analysis"
             url: https://docs.flagger.app/usage/metrics
+      - type: quiz
+        title: "Knowledge Check: Progressive Delivery With Flagger"
+        path: sections/section-030/quiz.yaml
+        pass_score: 70
+      - type: quiz
+        title: "Final Domain Quiz"
+        path: sections/final-domain-quiz.yaml
+        pass_score: 70

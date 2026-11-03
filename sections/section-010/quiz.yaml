@@ -1,0 +1,245 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats098-010
+course_id: ATS098
+exam_code: FLUX
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-010
+  title: "Scanning Image Registries"
+placement:
+  position: after
+  reading: sections/section-010/capstone/labs/lab-01/question.md
+questions:
+  - id: ats098-010-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the controller that lists registry tags"
+    source_readings:
+      - sections/section-010/module-01/course-01-scanning-with-imagerepository.md
+    prompt: "Which Flux controller lists the tags of an image in a container registry and stores the result in an ImageRepository?"
+    options:
+      - id: a
+        text: "image-reflector-controller"
+        explanation: "Correct. It is the client that asks the registry for tags at each interval."
+      - id: b
+        text: "image-automation-controller"
+        explanation: "Not correct. That controller writes new tags to Git."
+      - id: c
+        text: "source-controller"
+        explanation: "Not correct. It fetches Git repositories, Helm charts and OCI artifacts."
+      - id: d
+        text: "kustomize-controller"
+        explanation: "Not correct. It applies manifests to the cluster."
+    correct_option: a
+    explanation: "Correct. It is the client that asks the registry for tags at each interval."
+
+  - id: ats098-010-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Write the image field of an ImageRepository"
+    source_readings:
+      - sections/section-010/module-01/course-01-scanning-with-imagerepository.md
+    prompt: "Which value is correct for the `image` field of an ImageRepository that scans the lab registry?"
+    options:
+      - id: a
+        text: "`http://registry.localtest.me:5000/podinfo`"
+        explanation: "Not correct. The field takes no scheme such as http://."
+      - id: b
+        text: "`registry.localtest.me:5000/podinfo:6.15.0`"
+        explanation: "Not correct. The field takes no tag. Choosing a tag is the job of an ImagePolicy."
+      - id: c
+        text: "`registry.localtest.me:5000/podinfo`"
+        explanation: "Correct. The field holds the registry address and the repository, with no scheme and no tag."
+      - id: d
+        text: "`podinfo:6.15.0`"
+        explanation: "Not correct. The registry address is missing and a tag must not be there."
+    correct_option: c
+    explanation: "Correct. The field holds the registry address and the repository, with no scheme and no tag."
+
+  - id: ats098-010-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Fix a scan that fails against a plain HTTP registry"
+    source_readings:
+      - sections/section-010/module-01/course-01-scanning-with-imagerepository.md
+    prompt: "A scan of a registry that answers over plain HTTP fails with a TLS error. Which field fixes it in this lab?"
+    options:
+      - id: a
+        text: "`exclusionList` in the ImageRepository spec"
+        explanation: "Not correct. It leaves tags out and does not change the connection."
+      - id: b
+        text: "`insecure: true` in the ImageRepository spec"
+        explanation: "Correct. It allows a registry without TLS. A real registry uses HTTPS and does not need it."
+      - id: c
+        text: "`interval: 1m` in the ImageRepository spec"
+        explanation: "Not correct. The interval sets how often the scan runs, not how it connects."
+      - id: d
+        text: "`filterTags.pattern` in the ImagePolicy spec"
+        explanation: "Not correct. A policy filters tags after the scan. It cannot change the connection."
+    correct_option: b
+    explanation: "Correct. It allows a registry without TLS. A real registry uses HTTPS and does not need it."
+
+  - id: ats098-010-q04
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "State the default exclusionList"
+    source_readings:
+      - sections/section-010/module-01/course-01-scanning-with-imagerepository.md
+    prompt: "You do not set `exclusionList` on an ImageRepository. Which tags does the scan leave out?"
+    options:
+      - id: a
+        text: "No tags at all"
+        explanation: "Not correct. A default expression exists."
+      - id: b
+        text: "The tag `latest`"
+        explanation: "Not correct. `latest` is only left out when you add an expression for it."
+      - id: c
+        text: "Tags that contain `-rc`"
+        explanation: "Not correct. Release candidates are not left out by default."
+      - id: d
+        text: "Tags that end in `.sig`"
+        explanation: "Correct. The default expression is `^.*\\.sig$`, which matches image signature tags."
+    correct_option: d
+    explanation: "Correct. The default expression is `^.*\\.sig$`, which matches image signature tags."
+
+  - id: ats098-010-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain that exclusionList replaces its default"
+    source_readings:
+      - sections/section-010/module-01/course-01-scanning-with-imagerepository.md
+    prompt: "You set `exclusionList` to only `'^latest$'`. What happens to tags that end in `.sig`?"
+    options:
+      - id: a
+        text: "The scan still leaves them out, because the default is always added"
+        explanation: "Not correct. The default is replaced, not merged."
+      - id: b
+        text: "The scan fails with an error"
+        explanation: "Not correct. Setting the field is valid and the scan runs."
+      - id: c
+        text: "The scan keeps them, because your list replaces the default"
+        explanation: "Correct. When you set the field, the default `^.*\\.sig$` is gone unless you list it again."
+      - id: d
+        text: "The ImagePolicy leaves them out"
+        explanation: "Not correct. A policy only filters if `filterTags` says so."
+    correct_option: c
+    explanation: "Correct. When you set the field, the default `^.*\\.sig$` is gone unless you list it again."
+
+  - id: ats098-010-q06
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Find the tag an ImagePolicy chose"
+    source_readings:
+      - sections/section-010/module-01/course-02-choosing-a-tag-with-imagepolicy.md
+    prompt: "Where does Flux store the tag that an ImagePolicy chose?"
+    options:
+      - id: a
+        text: "In `.status.latestRef.tag` of the ImagePolicy"
+        explanation: "Correct. `flux get image policy` shows this value."
+      - id: b
+        text: "In `.status.lastScanResult.latestTags` of the ImageRepository"
+        explanation: "Not correct. That list is a sample of recent tags, not the choice."
+      - id: c
+        text: "In `.spec.policy` of the ImagePolicy"
+        explanation: "Not correct. The spec holds the rule, not the result."
+      - id: d
+        text: "In the image field of the running Deployment"
+        explanation: "Not correct. The Deployment changes only after Git changes."
+    correct_option: a
+    explanation: "Correct. `flux get image policy` shows this value."
+
+  - id: ats098-010-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain why a SemVer range skips release candidates"
+    source_readings:
+      - sections/section-010/module-01/course-02-choosing-a-tag-with-imagepolicy.md
+    prompt: "The registry holds `6.15.0` and `6.16.0-rc.1`. Why does the range `>=6.0.0` not choose `6.16.0-rc.1`?"
+    options:
+      - id: a
+        text: "The default exclusionList removes tags that contain `-rc`"
+        explanation: "Not correct. The default list removes only tags that end in `.sig`."
+      - id: b
+        text: "Release candidates are older than `6.15.0`"
+        explanation: "Not correct. `6.16.0-rc.1` is a higher version than `6.15.0`."
+      - id: c
+        text: "A SemVer policy ignores every tag that has a hyphen"
+        explanation: "Not correct. Hyphens are valid in SemVer. The pre-release rule is what applies."
+      - id: d
+        text: "A range without a pre-release part never matches a pre-release version"
+        explanation: "Correct. To match `-rc` tags, the range must name a pre-release part."
+    correct_option: d
+    explanation: "Correct. To match `-rc` tags, the range must name a pre-release part."
+
+  - id: ats098-010-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain why alphabetical order fails for versions"
+    source_readings:
+      - sections/section-010/module-01/course-02-choosing-a-tag-with-imagepolicy.md
+    prompt: "Why is an `alphabetical` policy a poor rule for tags such as `6.15.0` and `7.0.0-rc.1`?"
+    options:
+      - id: a
+        text: "It only accepts tags that are numbers"
+        explanation: "Not correct. That is the limit of the numerical rule."
+      - id: b
+        text: "It sorts text character by character, so `7.0.0-rc.1` beats `6.15.0` and it knows nothing about stable releases"
+        explanation: "Correct. Text order ignores what a version means."
+      - id: c
+        text: "It always chooses the first tag in the list"
+        explanation: "Not correct. With `order: asc` it chooses the last tag in text order."
+      - id: d
+        text: "It cannot read the tags of an ImageRepository"
+        explanation: "Not correct. Every rule reads the scan result."
+    correct_option: b
+    explanation: "Correct. Text order ignores what a version means."
+
+  - id: ats098-010-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use filterTags before a rule"
+    source_readings:
+      - sections/section-010/module-01/course-03-filtering-and-extracting-build-tags.md
+    prompt: "A policy has `filterTags.pattern: '^main-[a-f0-9]+-[0-9]+$'` and the rule `alphabetical`. It chooses `main-9f8e7d6-1760003600` instead of the newest build. Why?"
+    options:
+      - id: a
+        text: "Text order differs first at the commit hash, so the timestamp never decides"
+        explanation: "Correct. Without `extract`, the whole tag is sorted and the hash comes first."
+      - id: b
+        text: "The filter removes the newest build"
+        explanation: "Not correct. The pattern matches every main build."
+      - id: c
+        text: "`alphabetical` sorts by build time by default"
+        explanation: "Not correct. It sorts text only."
+      - id: d
+        text: "The pull request tags win because they are newer"
+        explanation: "Not correct. The filter removes the `pr-` tags."
+    correct_option: a
+    explanation: "Correct. Without `extract`, the whole tag is sorted and the hash comes first."
+
+  - id: ats098-010-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Combine extract with a numerical rule"
+    source_readings:
+      - sections/section-010/module-01/course-03-filtering-and-extracting-build-tags.md
+    prompt: "A pattern ends in `-(?P<ts>[0-9]+)$`. Which settings sort the tags by that timestamp, and what does `.status.latestRef.tag` hold?"
+    options:
+      - id: a
+        text: "`extract: '$ts'` with `numerical`; it holds only the timestamp"
+        explanation: "Not correct. The status always holds the full tag."
+      - id: b
+        text: "`extract: 'ts'` with `alphabetical`; it holds the full tag"
+        explanation: "Not correct. The value needs the `$` and a number sorts as text under `alphabetical`."
+      - id: c
+        text: "`extract: '$ts'` with `numerical`; it holds the full tag of the winner"
+        explanation: "Correct. The extracted value is only used for sorting. The status keeps the full tag."
+      - id: d
+        text: "`numerical` on the whole tag; it holds the full tag"
+        explanation: "Not correct. A tag such as `main-0c1d2e3-1760007200` is not a number, so the policy reports an error."
+    correct_option: c
+    explanation: "Correct. The extracted value is only used for sorting. The status keeps the full tag."
