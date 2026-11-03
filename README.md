@@ -25,9 +25,9 @@ contains:
 
 | Section | Title | Modules | Labs | Topic |
 | --- | --- | --- | --- | --- |
-| [010](sections/section-010) | Scanning Image Registries | 1 | 1 + capstone | `ImageRepository`, `ImagePolicy` |
-| [020](sections/section-020) | Automated Git Write-Backs | 1 | 1 + capstone | `ImageUpdateAutomation`, setter markers |
-| [030](sections/section-030) | Progressive Delivery With Flagger | 1 | 1 + capstone | Flagger `Canary`, A/B testing |
+| [010](sections/section-010) | Scanning Image Registries | 3 | 3 + capstone | `ImageRepository`, `ImagePolicy`, `secretRef`, digests |
+| [020](sections/section-020) | Automated Git Write-Backs | 3 | 3 + capstone | `ImageUpdateAutomation`, setter markers, Helm values |
+| [030](sections/section-030) | Progressive Delivery With Flagger | 3 | 3 + capstone | Flagger `Canary`, A/B testing, metrics, webhooks |
 
 The order is the order a release travels: a new tag in the registry, a commit
 in Git, and a gradual rollout to users.
@@ -39,8 +39,14 @@ in Git, and a gradual rollout to users.
 | Module | Reader | Parts | Labs |
 | --- | --- | --- | --- |
 | 010-01 | [Scan A Registry And Choose A Tag](sections/section-010/module-01/course.md) | 3 | [lab-01](sections/section-010/module-01/labs/lab-01) |
+| 010-02 | [Authenticate To A Private Registry](sections/section-010/module-02/course.md) | 5 | [lab-01](sections/section-010/module-02/labs/lab-01) |
+| 010-03 | [Choose Tags With Ranges And Digests](sections/section-010/module-03/course.md) | 5 | [lab-01](sections/section-010/module-03/labs/lab-01) |
 | 020-01 | [Write New Image Tags Back To Git](sections/section-020/module-01/course.md) | 3 | [lab-01](sections/section-020/module-01/labs/lab-01) |
+| 020-02 | [Release Commits And Helm Values](sections/section-020/module-02/course.md) | 5 | [lab-01](sections/section-020/module-02/labs/lab-01) |
+| 020-03 | [Operate And Debug Image Automation](sections/section-020/module-03/course.md) | 5 | [lab-01](sections/section-020/module-03/labs/lab-01) |
 | 030-01 | [Roll Out Releases Gradually With Flagger](sections/section-030/module-01/course.md) | 3 | [lab-01](sections/section-030/module-01/labs/lab-01) |
+| 030-02 | [Choose A Deployment Strategy In Flagger](sections/section-030/module-02/course.md) | 5 | [lab-01](sections/section-030/module-02/labs/lab-01) |
+| 030-03 | [Judge Releases With Metrics, Webhooks And Alerts](sections/section-030/module-03/course.md) | 5 | [lab-01](sections/section-030/module-03/labs/lab-01) |
 
 ---
 

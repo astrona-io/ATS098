@@ -14,6 +14,8 @@ This section covers the second half of Flux image automation: writing the chosen
 - Reading `flux get image update`, `.status.lastPushCommit` and the commit in Git.
 - Commit message templates and the data they can use.
 - Pushing to a separate branch so a person reviews each release before it reaches `main`.
+- Setter markers in Helm values, pinning by digest, update paths, commit templates with `.Changed.Changes`, signed commits and push options.
+- Reading, tracing, pausing and debugging the image objects, and sending their events out with a `Provider` and an `Alert`.
 
 ## The learning path
 
@@ -27,6 +29,28 @@ The module starts at its landing page, which also launches the playground. The p
 2. ImageUpdateAutomation And The Release Loop, followed by the lab **Automate The podinfo Release**
 3. Commit Messages, Authors And Branches
 4. Summary
+
+### 2. Release Commits And Helm Values
+
+Markers in Helm values and `HelmRelease` objects, digests, update paths, commit message templates and signed commits. A graded lab follows the commit message part: **Describe Releases In Commit Messages**.
+
+1. Setter Markers In Helm Values
+2. Pinning Images By Digest
+3. Update Paths And The Setters Strategy
+4. Commit Message Templates, followed by the lab
+5. Signing Commits And Push Options
+6. Summary
+
+### 3. Operate And Debug Image Automation
+
+Reading the image objects, tracing a release, suspending and resuming, alerts and providers, and the common faults. A graded lab follows the alerts part: **Alert On Image Updates**.
+
+1. Reading The State Of The Image Objects
+2. Tracing A Release
+3. Suspending And Resuming Automation
+4. Alerts And Providers For Image Events, followed by the lab
+5. Common Failure Causes
+6. Summary
 
 ## Section capstone: Repair A Release Loop That Never Commits
 

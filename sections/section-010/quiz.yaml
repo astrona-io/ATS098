@@ -243,3 +243,463 @@ questions:
         explanation: "Not correct. A tag such as `main-0c1d2e3-1760007200` is not a number, so the policy reports an error."
     correct_option: c
     explanation: "Correct. The extracted value is only used for sorting. The status keeps the full tag."
+
+  - id: ats098-010-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the answer of a registry to a request without credentials"
+    source_readings:
+      - sections/section-010/module-02/course-01-how-the-reflector-authenticates.md
+    prompt: "A private registry receives a request for a tag list with no credentials. Which status does it send?"
+    options:
+      - id: a
+        text: "`200 OK` with an empty list"
+        explanation: "Not correct. A private registry does not answer without a login."
+      - id: b
+        text: "`401 Unauthorized` with a `WWW-Authenticate` header"
+        explanation: "Correct. The header says how to log in, and the controller answers it with the credentials from the `ImageRepository`."
+      - id: c
+        text: "`404 Not Found`"
+        explanation: "Not correct. The repository exists, so the registry asks for a login instead."
+      - id: d
+        text: "`301 Moved Permanently`"
+        explanation: "Not correct. A redirect does not ask for credentials."
+    correct_option: b
+    explanation: "Correct. The header says how to log in, and the controller answers it with the credentials from the `ImageRepository`."
+
+  - id: ats098-010-q12
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the Secret type that holds a registry login"
+    source_readings:
+      - sections/section-010/module-02/course-02-credentials-with-secretref.md
+    prompt: "Which Secret type holds a registry login that an `ImageRepository` can use in `secretRef`?"
+    options:
+      - id: a
+        text: "`Opaque` with the key `password`"
+        explanation: "Not correct. The controller reads the Docker configuration format."
+      - id: b
+        text: "`kubernetes.io/basic-auth`"
+        explanation: "Not correct. That type holds a user name and a password for other uses, not a registry login."
+      - id: c
+        text: "`kubernetes.io/dockerconfigjson` with the key `.dockerconfigjson`"
+        explanation: "Correct. It holds a JSON document that maps a registry address to a user name and a password."
+      - id: d
+        text: "`kubernetes.io/tls`"
+        explanation: "Not correct. That type holds a certificate and a key."
+    correct_option: c
+    explanation: "Correct. It holds a JSON document that maps a registry address to a user name and a password."
+
+  - id: ats098-010-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Place the Secret in the right namespace"
+    source_readings:
+      - sections/section-010/module-02/course-02-credentials-with-secretref.md
+    prompt: "The `ImageRepository` `podinfo` is in `flux-system`. In which namespace must the Secret named by its `secretRef` be?"
+    options:
+      - id: a
+        text: "Any namespace, because Secrets are cluster-wide"
+        explanation: "Not correct. A Secret belongs to one namespace."
+      - id: b
+        text: "`default`"
+        explanation: "Not correct. The controller does not look there."
+      - id: c
+        text: "`gitea`"
+        explanation: "Not correct. That is the namespace of the Git server in the lab."
+      - id: d
+        text: "`flux-system`, the namespace of the `ImageRepository`"
+        explanation: "Correct. The `secretRef` is read from the namespace of the `ImageRepository`."
+    correct_option: d
+    explanation: "Correct. The `secretRef` is read from the namespace of the `ImageRepository`."
+
+  - id: ats098-010-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain why the registry password stays out of Git"
+    source_readings:
+      - sections/section-010/module-02/course-02-credentials-with-secretref.md
+    prompt: "Why is the registry password kept in a Secret in the cluster and not in a file in the Git repository?"
+    options:
+      - id: a
+        text: "Everyone who can read the repository can read the password, and it stays in the history"
+        explanation: "Correct. The `ImageRepository` in Git holds only the name of the Secret."
+      - id: b
+        text: "Flux cannot read Secrets from Git"
+        explanation: "Not correct. Flux can apply Secrets from Git, but a plain Secret in Git is readable by everyone with access."
+      - id: c
+        text: "Secrets in Git are not allowed by Kubernetes"
+        explanation: "Not correct. Kubernetes accepts the object; the problem is who can read the file."
+      - id: d
+        text: "The `ImageRepository` has a password field that takes precedence"
+        explanation: "Not correct. The `ImageRepository` has no password field."
+    correct_option: a
+    explanation: "Correct. The `ImageRepository` in Git holds only the name of the Secret."
+
+  - id: ats098-010-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Match the Secret address to the image field"
+    source_readings:
+      - sections/section-010/module-02/course-02-credentials-with-secretref.md
+    prompt: "The `image` of an `ImageRepository` is `registry-private.registry.svc.cluster.local:5000/podinfo`. Which `--docker-server` value lets the controller find the login?"
+    options:
+      - id: a
+        text: "`http://registry-private.registry.svc.cluster.local:5000`"
+        explanation: "Not correct. The address has no scheme."
+      - id: b
+        text: "`registry-private.registry.svc.cluster.local`"
+        explanation: "Not correct. The port is part of the registry host."
+      - id: c
+        text: "`registry-private.registry.svc.cluster.local:5000/podinfo`"
+        explanation: "Not correct. The repository name is not part of the address."
+      - id: d
+        text: "`registry-private.registry.svc.cluster.local:5000`"
+        explanation: "Correct. The host with its port must match the host of the `image` field."
+    correct_option: d
+    explanation: "Correct. The host with its port must match the host of the `image` field."
+
+  - id: ats098-010-q16
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what serviceAccountName reads"
+    source_readings:
+      - sections/section-010/module-02/course-03-service-accounts-and-shared-credentials.md
+    prompt: "What does the `serviceAccountName` field of an `ImageRepository` make the controller read?"
+    options:
+      - id: a
+        text: "The `imagePullSecrets` of that `ServiceAccount` in the namespace of the `ImageRepository`"
+        explanation: "Correct. Those Secrets are used as the registry login for the scan."
+      - id: b
+        text: "The token of the `ServiceAccount`, sent to the registry as a bearer token"
+        explanation: "Not correct. The token of a `ServiceAccount` is for the Kubernetes API."
+      - id: c
+        text: "The roles bound to the `ServiceAccount`"
+        explanation: "Not correct. Roles do not hold registry credentials."
+      - id: d
+        text: "The annotations of the `ServiceAccount` namespace"
+        explanation: "Not correct. Annotations are not used as a login."
+    correct_option: a
+    explanation: "Correct. Those Secrets are used as the registry login for the scan."
+
+  - id: ats098-010-q17
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Limit which namespaces may use an ImageRepository"
+    source_readings:
+      - sections/section-010/module-02/course-03-service-accounts-and-shared-credentials.md
+    prompt: "A policy in the namespace `team-a` refers to an `ImageRepository` in `flux-system`, and the reference is refused. Which field on the `ImageRepository` allows it?"
+    options:
+      - id: a
+        text: "`serviceAccountName` with the name of a team account"
+        explanation: "Not correct. It selects a login, not the namespaces that may use the scan."
+      - id: b
+        text: "`accessFrom` with a namespace selector that matches the labels of `team-a`"
+        explanation: "Correct. Without `accessFrom`, other namespaces may not use the object."
+      - id: c
+        text: "`interval` set to the same value as the policy"
+        explanation: "Not correct. Intervals do not grant access."
+      - id: d
+        text: "`insecure: true`"
+        explanation: "Not correct. It switches HTTPS off for the registry."
+    correct_option: b
+    explanation: "Correct. Without `accessFrom`, other namespaces may not use the object."
+
+  - id: ats098-010-q18
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the field for a private certificate authority"
+    source_readings:
+      - sections/section-010/module-02/course-04-cloud-registries-tls-and-proxies.md
+    prompt: "A registry uses HTTPS with a certificate signed by the private authority of the company. Which setting lets the scan trust it?"
+    options:
+      - id: a
+        text: "`insecure: true`"
+        explanation: "Not correct. It switches HTTPS off and is for a lab registry only."
+      - id: b
+        text: "`provider: generic`"
+        explanation: "Not correct. It is the default and adds no trust."
+      - id: c
+        text: "`certSecretRef` naming a Secret with the key `ca.crt`"
+        explanation: "Correct. The controller then trusts the authority that signed the certificate."
+      - id: d
+        text: "`secretRef` naming a Secret with the key `ca.crt`"
+        explanation: "Not correct. `secretRef` holds a registry login, not a certificate authority."
+    correct_option: c
+    explanation: "Correct. The controller then trusts the authority that signed the certificate."
+
+  - id: ats098-010-q19
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the required key of a proxy Secret"
+    source_readings:
+      - sections/section-010/module-02/course-04-cloud-registries-tls-and-proxies.md
+    prompt: "The scan must go through a proxy. Which key must the Secret named by `proxySecretRef` contain?"
+    options:
+      - id: a
+        text: "`url`"
+        explanation: "Not correct. The key has another name."
+      - id: b
+        text: "`proxy`"
+        explanation: "Not correct. The key has another name."
+      - id: c
+        text: "`username`"
+        explanation: "Not correct. It is optional and holds the proxy user."
+      - id: d
+        text: "`address`"
+        explanation: "Correct. It holds the URL of the proxy. The keys `username` and `password` are optional."
+    correct_option: d
+    explanation: "Correct. It holds the URL of the proxy. The keys `username` and `password` are optional."
+
+  - id: ats098-010-q20
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Find the cause of a 401 when the password is right"
+    source_readings:
+      - sections/section-010/module-02/course-05-diagnosing-authentication-errors.md
+    prompt: "The Secret exists, has the right type and holds the right password, but the scan still reports `401 Unauthorized`. The `image` is `registry-private.registry.svc.cluster.local:5000/podinfo`. Which cause is most likely?"
+    options:
+      - id: a
+        text: "The address in the Secret does not match the host and port of the `image` field"
+        explanation: "Correct. The controller finds the login by the registry host, so a different address gives no credentials."
+      - id: b
+        text: "The `interval` is too short"
+        explanation: "Not correct. A short interval does not cause a `401`."
+      - id: c
+        text: "The policy range is wrong"
+        explanation: "Not correct. The policy is evaluated after the scan."
+      - id: d
+        text: "The tag `latest` is excluded"
+        explanation: "Not correct. An exclusion removes a tag and does not change authentication."
+    correct_option: a
+    explanation: "Correct. The controller finds the login by the registry host, so a different address gives no credentials."
+
+  - id: ats098-010-q21
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Predict the result of a tilde range"
+    source_readings:
+      - sections/section-010/module-03/course-01-semantic-version-ranges.md
+    prompt: "The registry holds the stable tags `6.14.0`, `6.14.1`, `6.15.0` and `7.0.0`. Which tag does a `semver` policy with the range `~6.14.0` choose?"
+    options:
+      - id: a
+        text: "`6.15.0`"
+        explanation: "Not correct. The tilde allows patch changes only, so `6.15.0` is outside the range."
+      - id: b
+        text: "`6.14.1`"
+        explanation: "Correct. `~6.14.0` means `>=6.14.0 <6.15.0`, and `6.14.1` is the highest tag in it."
+      - id: c
+        text: "`6.14.0`"
+        explanation: "Not correct. `6.14.1` also fits and is higher."
+      - id: d
+        text: "`7.0.0`"
+        explanation: "Not correct. The range stays below `6.15.0`."
+    correct_option: b
+    explanation: "Correct. `~6.14.0` means `>=6.14.0 <6.15.0`, and `6.14.1` is the highest tag in it."
+
+  - id: ats098-010-q22
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Predict the result of a caret range"
+    source_readings:
+      - sections/section-010/module-03/course-01-semantic-version-ranges.md
+    prompt: "With the same stable tags `6.14.0`, `6.14.1`, `6.15.0` and `7.0.0`, which tag does the range `^6.14.0` choose?"
+    options:
+      - id: a
+        text: "`7.0.0`"
+        explanation: "Not correct. The caret keeps the major version."
+      - id: b
+        text: "`6.14.1`"
+        explanation: "Not correct. `6.15.0` fits too and is higher."
+      - id: c
+        text: "`6.14.0`"
+        explanation: "Not correct. Higher tags of version 6 fit too."
+      - id: d
+        text: "`6.15.0`"
+        explanation: "Correct. `^6.14.0` means `>=6.14.0 <7.0.0`."
+    correct_option: d
+    explanation: "Correct. `^6.14.0` means `>=6.14.0 <7.0.0`."
+
+  - id: ats098-010-q23
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read an OR range"
+    source_readings:
+      - sections/section-010/module-03/course-01-semantic-version-ranges.md
+    prompt: "What does the range `6.12.x || 6.13.x` allow?"
+    options:
+      - id: a
+        text: "Versions that are in `6.12` or in `6.13`"
+        explanation: "Correct. `||` joins two groups, and a version fits if it fits one of them."
+      - id: b
+        text: "Versions that are in `6.12` and in `6.13` at once"
+        explanation: "Not correct. No version can be in both."
+      - id: c
+        text: "Every version from `6.12.0` to `6.13.99`, including `6.12.x-rc.1`"
+        explanation: "Not correct. Pre-releases need a pre-release part in the range."
+      - id: d
+        text: "Only the tags `6.12.x` and `6.13.x` written as text"
+        explanation: "Not correct. The `x` is a wildcard for a number."
+    correct_option: a
+    explanation: "Correct. `||` joins two groups, and a version fits if it fits one of them."
+
+  - id: ats098-010-q24
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain why 6.x skips release candidates"
+    source_readings:
+      - sections/section-010/module-03/course-02-release-candidates-in-a-range.md
+    prompt: "Why does the range `6.x` never choose `6.16.0-rc.1`?"
+    options:
+      - id: a
+        text: "Release candidates are removed by the default `exclusionList`"
+        explanation: "Not correct. The exclusion list is empty unless you set it."
+      - id: b
+        text: "A pre-release fits a comparison only if the comparison has a pre-release part"
+        explanation: "Correct. The range `6.x` has none."
+      - id: c
+        text: "The image reflector controller ignores tags with a hyphen"
+        explanation: "Not correct. It reads them; the range decides."
+      - id: d
+        text: "`6.x` only matches the tag `6.x`"
+        explanation: "Not correct. The `x` is a wildcard."
+    correct_option: b
+    explanation: "Correct. The range `6.x` has none."
+
+  - id: ats098-010-q25
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Write a range that follows release candidates"
+    source_readings:
+      - sections/section-010/module-03/course-02-release-candidates-in-a-range.md
+    prompt: "Which range follows the releases and release candidates of version 6 and never chooses version 7, including `7.0.0-rc.1`?"
+    options:
+      - id: a
+        text: "`>=6.15.0 <7.0.0`"
+        explanation: "Not correct. It has no pre-release part, so no release candidate fits."
+      - id: b
+        text: "`>=6.15.0-0 <7.0.0`"
+        explanation: "Not correct. The second comparison has no pre-release part, so release candidates fail it."
+      - id: c
+        text: "`>=6.15.0-0`"
+        explanation: "Not correct. It follows version 7 too."
+      - id: d
+        text: "`>=6.15.0-0 <7.0.0-0`"
+        explanation: "Correct. Both comparisons have a pre-release part, and `7.0.0-0` is lower than `7.0.0-rc.1`."
+    correct_option: d
+    explanation: "Correct. Both comparisons have a pre-release part, and `7.0.0-0` is lower than `7.0.0-rc.1`."
+
+  - id: ats098-010-q26
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Predict a half-written range"
+    source_readings:
+      - sections/section-010/module-03/course-02-release-candidates-in-a-range.md
+    prompt: "A policy has the range `>=6.15.0-0 <7.0.0`. The registry holds `6.15.0` and `6.16.0-rc.2`. What does it choose?"
+    options:
+      - id: a
+        text: "`6.15.0`, because `6.16.0-rc.2` fails the comparison `<7.0.0`"
+        explanation: "Correct. A pre-release fits a comparison only if it has a pre-release part."
+      - id: b
+        text: "`6.16.0-rc.2`, because the first comparison has `-0`"
+        explanation: "Not correct. Every comparison must have it."
+      - id: c
+        text: "Nothing, because the range does not parse"
+        explanation: "Not correct. The range is valid."
+      - id: d
+        text: "`7.0.0-rc.1`"
+        explanation: "Not correct. It is not in the registry in this example."
+    correct_option: a
+    explanation: "Correct. A pre-release fits a comparison only if it has a pre-release part."
+
+  - id: ats098-010-q27
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Order pre-releases"
+    source_readings:
+      - sections/section-010/module-03/course-02-release-candidates-in-a-range.md
+    prompt: "Which of `6.16.0-beta.1`, `6.16.0-rc.2` and `6.16.0-rc.10` is the highest by SemVer rules?"
+    options:
+      - id: a
+        text: "`6.16.0-rc.2`, because the digit `2` is higher than `1`"
+        explanation: "Not correct. SemVer compares the piece `10` as a number."
+      - id: b
+        text: "`6.16.0-beta.1`, because `beta` is longer"
+        explanation: "Not correct. The text `beta` is lower than `rc`."
+      - id: c
+        text: "They are equal"
+        explanation: "Not correct. The pre-release parts are different."
+      - id: d
+        text: "`6.16.0-rc.10`, because the piece `10` is a number and is higher than `2`"
+        explanation: "Correct. Numbers compare as numbers, and `rc` is higher than `beta`."
+    correct_option: d
+    explanation: "Correct. Numbers compare as numbers, and `rc` is higher than `beta`."
+
+  - id: ats098-010-q28
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the requirement of the Always setting"
+    source_readings:
+      - sections/section-010/module-03/course-03-reflecting-image-digests.md
+    prompt: "Which field must an `ImagePolicy` have when `digestReflectionPolicy` is `Always`?"
+    options:
+      - id: a
+        text: "`interval`"
+        explanation: "Correct. The controller needs to know how often to read the digest again."
+      - id: b
+        text: "`filterTags`"
+        explanation: "Not correct. Filtering is optional."
+      - id: c
+        text: "`accessFrom`"
+        explanation: "Not correct. That field belongs to the `ImageRepository`."
+      - id: d
+        text: "`suspend`"
+        explanation: "Not correct. It stops the policy."
+    correct_option: a
+    explanation: "Correct. The controller needs to know how often to read the digest again."
+
+  - id: ats098-010-q29
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose the setting that notices a moved tag"
+    source_readings:
+      - sections/section-010/module-03/course-03-reflecting-image-digests.md
+    prompt: "A pipeline pushes the tag `6.15.0` again with a rebuilt image. Which `digestReflectionPolicy` makes `.status.latestRef.digest` change without a new choice?"
+    options:
+      - id: a
+        text: "`Never`"
+        explanation: "Not correct. It reads no digest."
+      - id: b
+        text: "`IfNotPresent`"
+        explanation: "Not correct. It records the digest once for each chosen tag."
+      - id: c
+        text: "`Always`, with an `interval`"
+        explanation: "Correct. It reads the digest at every interval, so a moved tag shows a new digest."
+      - id: d
+        text: "None of them, because a tag cannot move"
+        explanation: "Not correct. The registry owner can move a tag."
+    correct_option: c
+    explanation: "Correct. It reads the digest at every interval, so a moved tag shows a new digest."
+
+  - id: ats098-010-q30
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Find the first broken link"
+    source_readings:
+      - sections/section-010/module-03/course-05-reading-status-and-troubleshooting-policies.md
+    prompt: "An `ImagePolicy` is not `Ready` and its `ImageRepository` is not `Ready` either. Which object do you fix first?"
+    options:
+      - id: a
+        text: "The `ImagePolicy`, because it shows the final result"
+        explanation: "Not correct. It depends on the scan."
+      - id: b
+        text: "The `Kustomization`, because it applies both"
+        explanation: "Not correct. The message of the scan names the cause."
+      - id: c
+        text: "The `ImageRepository`, the first link of the chain"
+        explanation: "Correct. A policy cannot be healthy while its scan is not."
+      - id: d
+        text: "The registry address in the policy"
+        explanation: "Not correct. A policy has no registry address."
+    correct_option: c
+    explanation: "Correct. A policy cannot be healthy while its scan is not."

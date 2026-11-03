@@ -14,10 +14,14 @@ This section adds the safety step. Flagger is a progressive delivery operator fr
 - Following a promotion, and causing a rollback on purpose.
 - Load tests and acceptance tests with Flagger's load tester and webhooks.
 - A/B testing with a header match, blue/green deployments, and a custom Prometheus query in a `MetricTemplate`.
+- Installing Flagger with Helm, the supported providers, explicit step weights, and an autoscaler for the primary.
+- Choosing between canary, A/B, blue/green and mirroring, and reading the phases of a release.
+- Writing a `MetricTemplate`, testing its query by hand, and gating a release on a custom latency metric.
+- Webhooks of every type, gates that hold a release, alert providers, and troubleshooting a failing release.
 
 ## The learning path
 
-Work through the module in order. It has a landing page, three short parts, a graded lab right after the part it tests, and a summary. The landing page starts the module's playground. The playground installs ingress-nginx, Flagger, Prometheus and the load tester through Flux, so it takes several minutes to start.
+Work through the three modules in order. Each has a landing page, short parts, a graded lab right after the part it tests, and a summary. The landing page starts the module's playground. The playgrounds install ingress-nginx, Flagger, Prometheus and the load tester through Flux, so they take several minutes to start.
 
 ### 1. Roll Out Releases Gradually With Flagger
 
@@ -27,6 +31,28 @@ The module starts at its landing page, which also launches the playground. The p
 2. Canary Analysis, Promotion And Rollback, followed by the lab **Promote A New Version Through A Canary**
 3. A/B Testing, Blue/Green And Custom Metrics
 4. Summary
+
+### 2. Choose A Deployment Strategy In Flagger
+
+The module installs Flagger with Helm and then runs each strategy on podinfo. Its playground adds a second Deployment, `probe`, for blue/green.
+
+1. Flagger Providers And Installation
+2. Canary Release Steps And Autoscaling
+3. A/B Testing With Headers And Cookies, followed by the lab **Switch A Release To A/B Testing With A Header**
+4. Blue/Green And Traffic Mirroring
+5. Reading The Canary Status
+6. Summary
+
+### 3. Judge Releases With Metrics, Webhooks And Alerts
+
+The module teaches the checks that decide whether a release is promoted, and what to do when one fails.
+
+1. Built-In Metrics And MetricTemplates
+2. Writing And Testing Prometheus Queries, followed by the lab **Gate A Release On A Custom Latency Metric**
+3. Webhooks And Gates
+4. Alerts And Alert Providers
+5. Troubleshooting A Failing Release
+6. Summary
 
 ## Section capstone: Ship A Release From Registry To Primary
 

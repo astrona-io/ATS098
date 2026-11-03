@@ -243,3 +243,463 @@ questions:
         explanation: "Correct. `.Changed.FileChanges`, `.Changed.Objects` and `.Changed.Changes` hold what changed."
     correct_option: d
     explanation: "Correct. `.Changed.FileChanges`, `.Changed.Objects` and `.Changed.Changes` hold what changed."
+
+  - id: ats098-020-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose the marker suffix for a repository field"
+    source_readings:
+      - sections/section-020/module-02/course-01-setter-markers-in-helm-values.md
+    prompt: "Which marker suffix writes only the image name, for a Helm values field `repository:`?"
+    options:
+      - id: a
+        text: "`:name`"
+        explanation: "Correct. It writes the name of the image that the ImageRepository scans."
+      - id: b
+        text: "`:tag`"
+        explanation: "Not correct. It writes only the tag."
+      - id: c
+        text: "`:digest`"
+        explanation: "Not correct. It writes only the digest."
+      - id: d
+        text: "No suffix"
+        explanation: "Not correct. It writes the full `name:tag`."
+    correct_option: a
+    explanation: "Correct. It writes the name of the image that the ImageRepository scans."
+
+  - id: ats098-020-q12
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain which image name a marker writes"
+    source_readings:
+      - sections/section-020/module-02/course-01-setter-markers-in-helm-values.md
+    prompt: "The policy scans `registry.localtest.me:5000/podinfo` and the cluster pulls `ghcr.io/stefanprodan/podinfo`. A `:name` marker is on the `repository:` field. What does the controller write?"
+    options:
+      - id: a
+        text: "`ghcr.io/stefanprodan/podinfo`"
+        explanation: "Not correct. The controller does not know where the cluster pulls from."
+      - id: b
+        text: "`registry.localtest.me:5000/podinfo`"
+        explanation: "Correct. It writes the name of the image that the ImageRepository scans."
+      - id: c
+        text: "The digest of the image"
+        explanation: "Not correct. The suffix `:name` never writes a digest."
+      - id: d
+        text: "Nothing, because the file is not applied"
+        explanation: "Not correct. The controller edits any marked YAML file under the path."
+    correct_option: b
+    explanation: "Correct. It writes the name of the image that the ImageRepository scans."
+
+  - id: ats098-020-q13
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain why a digest is stronger than a tag"
+    source_readings:
+      - sections/section-020/module-02/course-02-pinning-images-by-digest.md
+    prompt: "Why can a digest pin a release more exactly than a tag?"
+    options:
+      - id: a
+        text: "A tag can be moved to another image and a digest identifies exactly one image"
+        explanation: "Correct. The digest is the hash of the image manifest."
+      - id: b
+        text: "A digest is shorter than a tag"
+        explanation: "Not correct. A digest is 64 hexadecimal characters after `sha256:`."
+      - id: c
+        text: "A tag is only used by Helm"
+        explanation: "Not correct. Tags are used by every registry client."
+      - id: d
+        text: "A digest is chosen by the cluster"
+        explanation: "Not correct. The registry computes it from the manifest."
+    correct_option: a
+    explanation: "Correct. The digest is the hash of the image manifest."
+
+  - id: ats098-020-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Set digestReflectionPolicy correctly"
+    source_readings:
+      - sections/section-020/module-02/course-02-pinning-images-by-digest.md
+    prompt: "A policy must notice when a registry owner pushes a different image under the same tag. Which setting does that?"
+    options:
+      - id: a
+        text: "`digestReflectionPolicy: Never`"
+        explanation: "Not correct. No digest is stored."
+      - id: b
+        text: "`digestReflectionPolicy: IfNotPresent`"
+        explanation: "Not correct. The digest is stored once and not checked again."
+      - id: c
+        text: "`digestReflectionPolicy: Always` with `spec.interval`"
+        explanation: "Correct. The policy reads the digest at every interval."
+      - id: d
+        text: "`exclusionList` on the ImageRepository"
+        explanation: "Not correct. It leaves tags out of the scan."
+    correct_option: c
+    explanation: "Correct. The policy reads the digest at every interval."
+
+  - id: ats098-020-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the digest of the chosen image"
+    source_readings:
+      - sections/section-020/module-02/course-02-pinning-images-by-digest.md
+    prompt: "Where does Flux keep the digest of the image that a policy chose?"
+    options:
+      - id: a
+        text: "`.status.latestRef.digest`"
+        explanation: "Correct. It is next to `.status.latestRef.tag`."
+      - id: b
+        text: "`.spec.digest`"
+        explanation: "Not correct. The spec holds what you configure."
+      - id: c
+        text: "`.status.lastScanResult.digest`"
+        explanation: "Not correct. The scan result holds the tag count and the latest tags."
+      - id: d
+        text: "`.metadata.annotations.digest`"
+        explanation: "Not correct. Flux does not store it there."
+    correct_option: a
+    explanation: "Correct. It is next to `.status.latestRef.tag`."
+
+  - id: ats098-020-q16
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the update strategy"
+    source_readings:
+      - sections/section-020/module-02/course-03-update-paths-and-the-setters-strategy.md
+    prompt: "Which `update.strategy` does an ImageUpdateAutomation use?"
+    options:
+      - id: a
+        text: "`Patches`"
+        explanation: "Not correct. No such strategy exists."
+      - id: b
+        text: "`Setters`"
+        explanation: "Correct. It is the only strategy and the default."
+      - id: c
+        text: "`Merge`"
+        explanation: "Not correct. No such strategy exists."
+      - id: d
+        text: "`Overlay`"
+        explanation: "Not correct. No such strategy exists."
+    correct_option: b
+    explanation: "Correct. It is the only strategy and the default."
+
+  - id: ats098-020-q17
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Diagnose an automation that never commits"
+    source_readings:
+      - sections/section-020/module-02/course-03-update-paths-and-the-setters-strategy.md
+    prompt: "An ImageUpdateAutomation is Ready, its policy chose a new tag, and no commit appears. `update.path` is `./clusters`, and the marker is in `apps/podinfo`. What is the cause?"
+    options:
+      - id: a
+        text: "The controller found no marker under the path"
+        explanation: "Correct. It reads only the files under `update.path`."
+      - id: b
+        text: "The policy is suspended"
+        explanation: "Not correct. The policy chose a new tag."
+      - id: c
+        text: "The Git server is down"
+        explanation: "Not correct. A failed push would show an error."
+      - id: d
+        text: "The marker needs the suffix `:digest`"
+        explanation: "Not correct. The suffix decides what is written, not whether the file is read."
+    correct_option: a
+    explanation: "Correct. It reads only the files under `update.path`."
+
+  - id: ats098-020-q18
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use Changed.Changes in a template"
+    source_readings:
+      - sections/section-020/module-02/course-04-commit-message-templates.md
+    prompt: "Which fields does each entry of `.Changed.Changes` have?"
+    options:
+      - id: a
+        text: "`.Name`, `.Path` and `.Line`"
+        explanation: "Not correct. These fields do not exist."
+      - id: b
+        text: "`.OldValue`, `.NewValue` and `.Setter`"
+        explanation: "Correct. They give the value before, the value after and the marker."
+      - id: c
+        text: "`.Author` and `.Branch`"
+        explanation: "Not correct. The author and branch are set in the spec."
+      - id: d
+        text: "`.Digest` and `.Tag`"
+        explanation: "Not correct. These are not fields of a change."
+    correct_option: b
+    explanation: "Correct. They give the value before, the value after and the marker."
+
+  - id: ats098-020-q19
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the Secret entry for a signing key"
+    source_readings:
+      - sections/section-020/module-02/course-05-signing-commits-and-push-options.md
+    prompt: "Which entry must the Secret of `signingKey.secretRef` hold?"
+    options:
+      - id: a
+        text: "`git.asc`"
+        explanation: "Correct. It holds the ASCII-armored private key."
+      - id: b
+        text: "`identity`"
+        explanation: "Not correct. That entry is for an SSH key."
+      - id: c
+        text: "`tls.crt`"
+        explanation: "Not correct. That entry is for a certificate."
+      - id: d
+        text: "`signing.key`"
+        explanation: "Not correct. The controller does not read that name."
+    correct_option: a
+    explanation: "Correct. It holds the ASCII-armored private key."
+
+  - id: ats098-020-q20
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose the right push field"
+    source_readings:
+      - sections/section-020/module-02/course-05-signing-commits-and-push-options.md
+    prompt: "The checkout branch is `main`, and the automation must push its commit to the branch `auto`. Which field does that?"
+    options:
+      - id: a
+        text: "`spec.git.push.refspec: refs/heads/main:refs/heads/auto`"
+        explanation: "Correct. A refspec maps the local reference to the remote reference."
+      - id: b
+        text: "`spec.update.path: auto`"
+        explanation: "Not correct. The path selects files."
+      - id: c
+        text: "`spec.git.commit.author.name: auto`"
+        explanation: "Not correct. It sets the author."
+      - id: d
+        text: "`spec.sourceRef.name: auto`"
+        explanation: "Not correct. It names the GitRepository."
+    correct_option: a
+    explanation: "Correct. A refspec maps the local reference to the remote reference."
+
+  - id: ats098-020-q21
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "List all image objects"
+    source_readings:
+      - sections/section-020/module-03/course-01-reading-the-state-of-the-image-objects.md
+    prompt: "Which command lists the repositories, the policies and the automations in one output?"
+    options:
+      - id: a
+        text: "`flux get image all`"
+        explanation: "Correct. Add `-A` to include every namespace."
+      - id: b
+        text: "`flux get images`"
+        explanation: "Not correct. The subcommand is `image`, not `images`."
+      - id: c
+        text: "`flux list image`"
+        explanation: "Not correct. Flux has no `list` command."
+      - id: d
+        text: "`flux image get`"
+        explanation: "Not correct. The order of the words is `get image`."
+    correct_option: a
+    explanation: "Correct. Add `-A` to include every namespace."
+
+  - id: ats098-020-q22
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Check that an automation runs"
+    source_readings:
+      - sections/section-020/module-03/course-01-reading-the-state-of-the-image-objects.md
+    prompt: "An ImageUpdateAutomation shows `READY` as `True` and never commits. Which status field shows whether the controller runs at each interval?"
+    options:
+      - id: a
+        text: "`.status.lastAutomationRunTime`"
+        explanation: "Correct. If it moves forward, the controller runs and finds nothing to change."
+      - id: b
+        text: "`.status.lastScanResult`"
+        explanation: "Not correct. That field belongs to an ImageRepository."
+      - id: c
+        text: "`.status.latestRef`"
+        explanation: "Not correct. That field belongs to an ImagePolicy."
+      - id: d
+        text: "`.spec.interval`"
+        explanation: "Not correct. It is the setting, not the result."
+    correct_option: a
+    explanation: "Correct. If it moves forward, the controller runs and finds nothing to change."
+
+  - id: ats098-020-q23
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Trace a Deployment to its commit"
+    source_readings:
+      - sections/section-020/module-03/course-02-tracing-a-release.md
+    prompt: "Which command prints the Flux Kustomization, the GitRepository and the revision behind a Deployment?"
+    options:
+      - id: a
+        text: "`flux trace deployment podinfo -n podinfo`"
+        explanation: "Correct. It follows the labels that Flux puts on applied objects."
+      - id: b
+        text: "`flux get deployment podinfo`"
+        explanation: "Not correct. Flux has no such command."
+      - id: c
+        text: "`flux events --for Deployment/podinfo`"
+        explanation: "Not correct. That reads events."
+      - id: d
+        text: "`flux logs deployment/podinfo`"
+        explanation: "Not correct. That reads controller logs."
+    correct_option: a
+    explanation: "Correct. It follows the labels that Flux puts on applied objects."
+
+  - id: ats098-020-q24
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Tell who made the last change"
+    source_readings:
+      - sections/section-020/module-03/course-02-tracing-a-release.md
+    prompt: "`flux trace` shows a commit hash. How do you find out whether the automation made it?"
+    options:
+      - id: a
+        text: "Read the author in `git log` for the marked file"
+        explanation: "Correct. Release commits carry the author set in the automation."
+      - id: b
+        text: "Read the namespace of the Deployment"
+        explanation: "Not correct. It says nothing about the commit."
+      - id: c
+        text: "Read `.spec.interval` of the policy"
+        explanation: "Not correct. It does not identify a commit."
+      - id: d
+        text: "Restart the image reflector controller"
+        explanation: "Not correct. That changes nothing about history."
+    correct_option: a
+    explanation: "Correct. Release commits carry the author set in the automation."
+
+  - id: ats098-020-q25
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Make a pause last"
+    source_readings:
+      - sections/section-020/module-03/course-03-suspending-and-resuming-automation.md
+    prompt: "`flux suspend image update podinfo` can be undone at the next sync. What makes the pause last?"
+    options:
+      - id: a
+        text: "`spec.suspend: true` in the file in Git"
+        explanation: "Correct. The Flux Kustomization applies Git, so the pause is part of the desired state."
+      - id: b
+        text: "Running `flux suspend` every minute"
+        explanation: "Not correct. It is a workaround that fails when you stop."
+      - id: c
+        text: "Deleting the ImageRepository"
+        explanation: "Not correct. That removes the scan, and Git still holds the object."
+      - id: d
+        text: "Restarting the notification controller"
+        explanation: "Not correct. It has no effect on the object."
+    correct_option: a
+    explanation: "Correct. The Flux Kustomization applies Git, so the pause is part of the desired state."
+
+  - id: ats098-020-q26
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose what to suspend during a freeze"
+    source_readings:
+      - sections/section-020/module-03/course-03-suspending-and-resuming-automation.md
+    prompt: "During a release freeze, which object should you suspend so the policy stays current?"
+    options:
+      - id: a
+        text: "The ImageRepository"
+        explanation: "Not correct. New tags stop appearing."
+      - id: b
+        text: "The ImageUpdateAutomation"
+        explanation: "Correct. Commits stop, and the scan and the policy go on."
+      - id: c
+        text: "The GitRepository"
+        explanation: "Not correct. Flux stops fetching every commit."
+      - id: d
+        text: "The notification controller"
+        explanation: "Not correct. That stops events, not commits."
+    correct_option: b
+    explanation: "Correct. Commits stop, and the scan and the policy go on."
+
+  - id: ats098-020-q27
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the two notification objects"
+    source_readings:
+      - sections/section-020/module-03/course-04-alerts-and-providers-for-image-events.md
+    prompt: "Which two objects send image events out of the cluster?"
+    options:
+      - id: a
+        text: "`Receiver` and `Webhook`"
+        explanation: "Not correct. A Receiver takes events in."
+      - id: b
+        text: "`Provider` and `Alert`"
+        explanation: "Correct. The Provider says where to send, and the Alert says what to send."
+      - id: c
+        text: "`Notifier` and `Channel`"
+        explanation: "Not correct. These kinds do not exist."
+      - id: d
+        text: "`EventSource` and `EventSink`"
+        explanation: "Not correct. These kinds do not exist."
+    correct_option: b
+    explanation: "Correct. The Provider says where to send, and the Alert says what to send."
+
+  - id: ats098-020-q28
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read events of an automation"
+    source_readings:
+      - sections/section-020/module-03/course-04-alerts-and-providers-for-image-events.md
+    prompt: "Which command reads the events of the automation `podinfo`?"
+    options:
+      - id: a
+        text: "`flux events --for ImageUpdateAutomation/podinfo`"
+        explanation: "Correct. `--for` takes `Kind/name`."
+      - id: b
+        text: "`flux get events podinfo`"
+        explanation: "Not correct. Flux has no such command."
+      - id: c
+        text: "`flux logs --for podinfo`"
+        explanation: "Not correct. `--for` belongs to `flux events`."
+      - id: d
+        text: "`flux describe image update podinfo`"
+        explanation: "Not correct. Flux has no `describe` command."
+    correct_option: a
+    explanation: "Correct. `--for` takes `Kind/name`."
+
+  - id: ats098-020-q29
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Match a symptom to a cause"
+    source_readings:
+      - sections/section-020/module-03/course-05-common-failure-causes.md
+    prompt: "The policy chose `6.15.0`, the automation is ready and its log says it cannot find a policy. Which fault fits?"
+    options:
+      - id: a
+        text: "The marker names a policy that does not exist"
+        explanation: "Correct. The controller looks up the policy named in the marker."
+      - id: b
+        text: "The registry has no TLS"
+        explanation: "Not correct. That is a scan fault, and the policy chose a tag."
+      - id: c
+        text: "The Deployment has no probes"
+        explanation: "Not correct. That does not affect the automation."
+      - id: d
+        text: "The Alert has no provider"
+        explanation: "Not correct. That stops events, not commits."
+    correct_option: a
+    explanation: "Correct. The controller looks up the policy named in the marker."
+
+  - id: ats098-020-q30
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Find the right controller log"
+    source_readings:
+      - sections/section-020/module-03/course-05-common-failure-causes.md
+    prompt: "Which deployment logs the commits and pushes of an ImageUpdateAutomation?"
+    options:
+      - id: a
+        text: "`image-automation-controller`"
+        explanation: "Correct. It clones, edits, commits and pushes."
+      - id: b
+        text: "`image-reflector-controller`"
+        explanation: "Not correct. It scans registries and runs policies."
+      - id: c
+        text: "`source-controller`"
+        explanation: "Not correct. It fetches Git repositories."
+      - id: d
+        text: "`notification-controller`"
+        explanation: "Not correct. It sends events out."
+    correct_option: a
+    explanation: "Correct. It clones, edits, commits and pushes."

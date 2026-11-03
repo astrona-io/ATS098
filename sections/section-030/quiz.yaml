@@ -243,3 +243,463 @@ questions:
         explanation: "Not correct. That is not a `thresholdRange` field."
     correct_option: a
     explanation: "Correct. Latency needs a maximum. A higher value fails the check."
+
+  - id: ats098-030-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the providers that run blue/green only"
+    source_readings:
+      - sections/section-030/module-02/course-01-flagger-providers-and-installation.md
+    prompt: "Which Flagger provider supports blue/green but has no built-in metrics?"
+    options:
+      - id: a
+        text: "`nginx`"
+        explanation: "Not correct. It supports canary and A/B testing and has built-in metrics."
+      - id: b
+        text: "`kubernetes`"
+        explanation: "Correct. The `kubernetes` provider only switches Services, so checks come from webhooks."
+      - id: c
+        text: "`istio`"
+        explanation: "Not correct. It supports every strategy and has built-in metrics."
+      - id: d
+        text: "`prometheus`"
+        explanation: "Not correct. That is a metrics source, not a provider."
+    correct_option: b
+    explanation: "Correct. The `kubernetes` provider only switches Services, so checks come from webhooks."
+
+  - id: ats098-030-q12
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Install Flagger for ingress-nginx"
+    source_readings:
+      - sections/section-030/module-02/course-01-flagger-providers-and-installation.md
+    prompt: "Which Helm value tells the Flagger chart to use ingress-nginx?"
+    options:
+      - id: a
+        text: "`provider: nginx` on the chart"
+        explanation: "Not correct. `provider` is a field of the Canary, not a chart value."
+      - id: b
+        text: "`ingress.class: nginx`"
+        explanation: "Not correct. The chart has no such value."
+      - id: c
+        text: "`meshProvider: nginx`"
+        explanation: "Correct. `meshProvider` sets the router the controller starts with."
+      - id: d
+        text: "`router: nginx`"
+        explanation: "Not correct. The chart has no `router` value."
+    correct_option: c
+    explanation: "Correct. `meshProvider` sets the router the controller starts with."
+
+  - id: ats098-030-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Write explicit step weights"
+    source_readings:
+      - sections/section-030/module-02/course-02-canary-release-steps-and-autoscaling.md
+    prompt: "A Canary has `stepWeights: [10, 30, 60]`. What does Flagger do?"
+    options:
+      - id: a
+        text: "It adds 10% at every step up to a maximum"
+        explanation: "Not correct. That is `stepWeight` with `maxWeight`."
+      - id: b
+        text: "It runs three iterations with no traffic share"
+        explanation: "Not correct. Iterations are used for A/B and blue/green."
+      - id: c
+        text: "It sends 10% to three canaries"
+        explanation: "Not correct. A Canary has one canary Deployment."
+      - id: d
+        text: "It moves the canary to 10%, then 30%, then 60% of the traffic"
+        explanation: "Correct. `stepWeights` lists the weight of each step."
+    correct_option: d
+    explanation: "Correct. `stepWeights` lists the weight of each step."
+
+  - id: ats098-030-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use an autoscaler with a Canary"
+    source_readings:
+      - sections/section-030/module-02/course-02-canary-release-steps-and-autoscaling.md
+    prompt: "What does Flagger do with an `autoscalerRef` that points at a HorizontalPodAutoscaler?"
+    options:
+      - id: a
+        text: "It creates a primary autoscaler for the primary Deployment"
+        explanation: "Correct. The primary gets its own HPA next to the one on the target."
+      - id: b
+        text: "It deletes the autoscaler during the analysis"
+        explanation: "Not correct. The autoscaler is kept."
+      - id: c
+        text: "It scales the canary to the primary's replica count"
+        explanation: "Not correct. The autoscaler decides the replicas."
+      - id: d
+        text: "It ignores the autoscaler"
+        explanation: "Not correct. The reference is read and used."
+    correct_option: a
+    explanation: "Correct. The primary gets its own HPA next to the one on the target."
+
+  - id: ats098-030-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Match a Canary field to its strategy"
+    source_readings:
+      - sections/section-030/module-02/course-03-ab-testing-with-headers-and-cookies.md
+    prompt: "Which pair of fields turns a Canary into an A/B test?"
+    options:
+      - id: a
+        text: "`stepWeight` and `maxWeight`"
+        explanation: "Not correct. They give a weighted release."
+      - id: b
+        text: "`mirror` and `mirrorWeight`"
+        explanation: "Not correct. They give mirroring."
+      - id: c
+        text: "`iterations` and `match`"
+        explanation: "Correct. Only requests that match reach the canary, for a set number of iterations."
+      - id: d
+        text: "`skipAnalysis` and `threshold`"
+        explanation: "Not correct. They do not select a strategy."
+    correct_option: c
+    explanation: "Correct. Only requests that match reach the canary, for a set number of iterations."
+
+  - id: ats098-030-q16
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Map an A/B match to ingress-nginx"
+    source_readings:
+      - sections/section-030/module-02/course-03-ab-testing-with-headers-and-cookies.md
+    prompt: "With `provider: nginx`, how does Flagger apply a header match?"
+    options:
+      - id: a
+        text: "It rewrites the Service selector"
+        explanation: "Not correct. The Services stay as they are."
+      - id: b
+        text: "It changes the pod labels"
+        explanation: "Not correct. Labels do not route requests."
+      - id: c
+        text: "It starts a sidecar proxy"
+        explanation: "Not correct. nginx needs no sidecar."
+      - id: d
+        text: "It sets `canary-by-header` annotations on the canary Ingress"
+        explanation: "Correct. Flagger creates a canary Ingress with the matching annotations."
+    correct_option: d
+    explanation: "Correct. Flagger creates a canary Ingress with the matching annotations."
+
+  - id: ats098-030-q17
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Match a cookie for A/B testing"
+    source_readings:
+      - sections/section-030/module-02/course-03-ab-testing-with-headers-and-cookies.md
+    prompt: "Which request reaches the canary when the Canary matches the cookie `canary`?"
+    options:
+      - id: a
+        text: "A request with `Cookie: canary=always`"
+        explanation: "Correct. ingress-nginx sends a request to the canary when the cookie value is `always`."
+      - id: b
+        text: "A request with `Cookie: canary=true`"
+        explanation: "Not correct. ingress-nginx routes on the value `always`."
+      - id: c
+        text: "A request with the header `canary: always`"
+        explanation: "Not correct. That is a header, not a cookie."
+      - id: d
+        text: "Every request in the first iteration"
+        explanation: "Not correct. Only matching requests reach the canary."
+    correct_option: a
+    explanation: "Correct. ingress-nginx sends a request to the canary when the cookie value is `always`."
+
+  - id: ats098-030-q18
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Describe a blue/green run"
+    source_readings:
+      - sections/section-030/module-02/course-04-blue-green-and-traffic-mirroring.md
+    prompt: "What happens to users during the iterations of a blue/green Canary?"
+    options:
+      - id: a
+        text: "They receive 50% of the traffic on the canary"
+        explanation: "Not correct. No share is shifted."
+      - id: b
+        text: "They stay on the primary while tests run against the canary"
+        explanation: "Correct. The switch happens once, at the promotion."
+      - id: c
+        text: "They are blocked until the promotion"
+        explanation: "Not correct. The primary keeps answering."
+      - id: d
+        text: "They choose a version with a header"
+        explanation: "Not correct. That is A/B testing."
+    correct_option: b
+    explanation: "Correct. The switch happens once, at the promotion."
+
+  - id: ats098-030-q19
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "State what mirroring needs"
+    source_readings:
+      - sections/section-030/module-02/course-04-blue-green-and-traffic-mirroring.md
+    prompt: "Why does the playground not run traffic mirroring?"
+    options:
+      - id: a
+        text: "The load tester blocks mirrored requests"
+        explanation: "Not correct. The limit is in the router."
+      - id: b
+        text: "Mirroring needs a `maxWeight` of 100"
+        explanation: "Not correct. `maxWeight` is not related."
+      - id: c
+        text: "Mirroring works only for A/B tests"
+        explanation: "Not correct. It is set with `mirror` on a canary release."
+      - id: d
+        text: "ingress-nginx cannot mirror traffic the way Flagger needs, so a mesh or Gateway API is required"
+        explanation: "Correct. The nginx provider has no mirroring, so the strategy is explained but not run."
+    correct_option: d
+    explanation: "Correct. The nginx provider has no mirroring, so the strategy is explained but not run."
+
+  - id: ats098-030-q20
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Read the phase of a release"
+    source_readings:
+      - sections/section-030/module-02/course-05-reading-the-canary-status.md
+    prompt: "Which phase shows that Flagger waits for a `confirm-promotion` webhook?"
+    options:
+      - id: a
+        text: "`WaitingPromotion`"
+        explanation: "Correct. The release stops before the promotion until the gate opens."
+      - id: b
+        text: "`Waiting`"
+        explanation: "Not correct. That phase waits for `confirm-rollout`."
+      - id: c
+        text: "`Promoting`"
+        explanation: "Not correct. That phase copies the canary to the primary."
+      - id: d
+        text: "`Finalising`"
+        explanation: "Not correct. That phase cleans up after the promotion."
+    correct_option: a
+    explanation: "Correct. The release stops before the promotion until the gate opens."
+
+  - id: ats098-030-q21
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the built-in metrics"
+    source_readings:
+      - sections/section-030/module-03/course-01-built-in-metrics-and-metrictemplates.md
+    prompt: "Which two metrics does Flagger provide for ingress-nginx?"
+    options:
+      - id: a
+        text: "`error-rate` and `latency`"
+        explanation: "Not correct. Those are names you give to a MetricTemplate."
+      - id: b
+        text: "`request-success-rate` and `request-duration`"
+        explanation: "Correct. Success rate is a percentage and duration is the 99th percentile in milliseconds."
+      - id: c
+        text: "`cpu` and `memory`"
+        explanation: "Not correct. Flagger does not read pod resources."
+      - id: d
+        text: "`request-count` and `request-size`"
+        explanation: "Not correct. Those are not built in."
+    correct_option: b
+    explanation: "Correct. Success rate is a percentage and duration is the 99th percentile in milliseconds."
+
+  - id: ats098-030-q22
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Set the limit of a success-rate check"
+    source_readings:
+      - sections/section-030/module-03/course-01-built-in-metrics-and-metrictemplates.md
+    prompt: "Which `thresholdRange` fits `request-success-rate`?"
+    options:
+      - id: a
+        text: "`max: 99`"
+        explanation: "Not correct. A maximum would fail good releases."
+      - id: b
+        text: "`min: 0.99`"
+        explanation: "Not correct. The value is a percentage, not a fraction."
+      - id: c
+        text: "`min: 99`"
+        explanation: "Correct. A higher success rate is better, so the check needs a minimum."
+      - id: d
+        text: "`stepWeight: 99`"
+        explanation: "Not correct. That is not a `thresholdRange` field."
+    correct_option: c
+    explanation: "Correct. A higher success rate is better, so the check needs a minimum."
+
+  - id: ats098-030-q23
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use a placeholder in a MetricTemplate"
+    source_readings:
+      - sections/section-030/module-03/course-01-built-in-metrics-and-metrictemplates.md
+    prompt: "What does `{{ namespace }}` hold in a MetricTemplate query?"
+    options:
+      - id: a
+        text: "The namespace of the Canary target"
+        explanation: "Correct. Flagger replaces it before it sends the query."
+      - id: b
+        text: "The namespace of the MetricTemplate"
+        explanation: "Not correct. Flagger fills in the target's namespace."
+      - id: c
+        text: "The namespace of Prometheus"
+        explanation: "Not correct. That is part of the address."
+      - id: d
+        text: "Always `default`"
+        explanation: "Not correct. It follows the target."
+    correct_option: a
+    explanation: "Correct. Flagger replaces it before it sends the query."
+
+  - id: ats098-030-q24
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Refer to a MetricTemplate"
+    source_readings:
+      - sections/section-030/module-03/course-01-built-in-metrics-and-metrictemplates.md
+    prompt: "Which field of a metric in `analysis.metrics` points at a MetricTemplate?"
+    options:
+      - id: a
+        text: "`providerRef`"
+        explanation: "Not correct. That field belongs to alerts."
+      - id: b
+        text: "`templateRef`"
+        explanation: "Correct. `templateRef` has a `name` and, when needed, a `namespace`."
+      - id: c
+        text: "`queryRef`"
+        explanation: "Not correct. There is no such field."
+      - id: d
+        text: "`metricRef`"
+        explanation: "Not correct. There is no such field."
+    correct_option: b
+    explanation: "Correct. `templateRef` has a `name` and, when needed, a `namespace`."
+
+  - id: ats098-030-q25
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Test a query by hand"
+    source_readings:
+      - sections/section-030/module-03/course-02-writing-and-testing-prometheus-queries.md
+    prompt: "Why test a query against the Prometheus API before the Canary uses it?"
+    options:
+      - id: a
+        text: "To install the metric in Prometheus"
+        explanation: "Not correct. The query only reads data."
+      - id: b
+        text: "To reset the request counters"
+        explanation: "Not correct. Reading changes nothing."
+      - id: c
+        text: "To see the number Flagger will compare with the limit"
+        explanation: "Correct. A wrong query is found in seconds instead of during a release."
+      - id: d
+        text: "To skip the analysis interval"
+        explanation: "Not correct. The interval still applies."
+    correct_option: c
+    explanation: "Correct. A wrong query is found in seconds instead of during a release."
+
+  - id: ats098-030-q26
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Explain an empty query result"
+    source_readings:
+      - sections/section-030/module-03/course-02-writing-and-testing-prometheus-queries.md
+    prompt: "A canary query returns an empty result. What does Flagger do?"
+    options:
+      - id: a
+        text: "It treats the value as 0 and passes"
+        explanation: "Not correct. An empty result is not a number."
+      - id: b
+        text: "It stops the controller"
+        explanation: "Not correct. Only that Canary is affected."
+      - id: c
+        text: "It retries until the result has data and then passes"
+        explanation: "Not correct. Each interval counts a failed check."
+      - id: d
+        text: "It counts a failed check and reports that no values were found"
+        explanation: "Correct. The events say the target is probably not receiving traffic."
+    correct_option: d
+    explanation: "Correct. The events say the target is probably not receiving traffic."
+
+  - id: ats098-030-q27
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Pick a webhook type"
+    source_readings:
+      - sections/section-030/module-03/course-03-webhooks-and-gates.md
+    prompt: "Which webhook type holds a release before the analysis starts?"
+    options:
+      - id: a
+        text: "`pre-rollout`"
+        explanation: "Not correct. It runs once and a failure counts as a failed check."
+      - id: b
+        text: "`confirm-rollout`"
+        explanation: "Correct. The phase is `Waiting` until the webhook answers with a success status."
+      - id: c
+        text: "`post-rollout`"
+        explanation: "Not correct. It runs after the result."
+      - id: d
+        text: "`rollback`"
+        explanation: "Not correct. It forces a rollback."
+    correct_option: b
+    explanation: "Correct. The phase is `Waiting` until the webhook answers with a success status."
+
+  - id: ats098-030-q28
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use the load tester gate"
+    source_readings:
+      - sections/section-030/module-03/course-03-webhooks-and-gates.md
+    prompt: "What does a request to `/gate/open` do?"
+    options:
+      - id: a
+        text: "It starts the load test"
+        explanation: "Not correct. The load test is a `cmd` webhook."
+      - id: b
+        text: "It promotes the canary"
+        explanation: "Not correct. It only opens a gate."
+      - id: c
+        text: "It opens the gate, so `/gate/check` answers 200"
+        explanation: "Correct. A `confirm-rollout` webhook on `/gate/check` then passes."
+      - id: d
+        text: "It deletes the Canary"
+        explanation: "Not correct. It changes only the gate state."
+    correct_option: c
+    explanation: "Correct. A `confirm-rollout` webhook on `/gate/check` then passes."
+
+  - id: ats098-030-q29
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Pick an alert severity"
+    source_readings:
+      - sections/section-030/module-03/course-04-alerts-and-alert-providers.md
+    prompt: "Which severity sends only rollbacks and other errors to a provider?"
+    options:
+      - id: a
+        text: "`info`"
+        explanation: "Not correct. It sends every event."
+      - id: b
+        text: "`warn`"
+        explanation: "Not correct. It also sends failed checks."
+      - id: c
+        text: "`debug`"
+        explanation: "Not correct. It is not a severity."
+      - id: d
+        text: "`error`"
+        explanation: "Correct. `error` is the narrowest of the three severities."
+    correct_option: d
+    explanation: "Correct. `error` is the narrowest of the three severities."
+
+  - id: ats098-030-q30
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Order the causes of a stuck release"
+    source_readings:
+      - sections/section-030/module-03/course-05-troubleshooting-a-failing-release.md
+    prompt: "A canary release fails because the load test sends requests with the wrong host. Which cause is it?"
+    options:
+      - id: a
+        text: "No traffic reaches the canary"
+        explanation: "Correct. The metric check finds no values, so the target probably receives no traffic."
+      - id: b
+        text: "The new pods are not ready"
+        explanation: "Not correct. Readiness problems show before traffic is shifted."
+      - id: c
+        text: "A metric is outside its range because the version is slow"
+        explanation: "Not correct. With no traffic the query finds no values."
+      - id: d
+        text: "A `confirm-promotion` webhook fails"
+        explanation: "Not correct. The release would wait in `WaitingPromotion`."
+    correct_option: a
+    explanation: "Correct. The metric check finds no values, so the target probably receives no traffic."

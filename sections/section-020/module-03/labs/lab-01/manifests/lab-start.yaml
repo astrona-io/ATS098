@@ -1,0 +1,188 @@
+# Starting workloads for every ATS098 environment: the in-cluster Git server
+# (Gitea, HTTP on port 3000, no TLS), a tester client pod, the lab container
+# registry (HTTP on port 5000, no TLS) and a pod with regctl to copy tags into it.
+# Gitea and the registry store everything on emptyDir volumes: a pod restart
+# loses the repositories and the image tags.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitea
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: gitea
+  labels:
+    app: gitea
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: gitea
+          image: gitea/gitea:28.2.0-rootless
+          env:
+            - name: GITEA__security__INSTALL_LOCK
+              value: "true"
+            - name: GITEA__database__DB_TYPE
+              value: sqlite3
+            - name: GITEA__server__HTTP_PORT
+              value: "3000"
+            - name: GITEA__server__ROOT_URL
+              value: http://gitea.localtest.me:3000/
+            - name: GITEA__server__DISABLE_SSH
+              value: "true"
+            - name: GITEA__service__DISABLE_REGISTRATION
+              value: "true"
+            - name: GITEA__repository__DEFAULT_BRANCH
+              value: main
+          ports:
+            - name: http
+              containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /api/healthz
+              port: http
+            periodSeconds: 5
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/gitea
+            - name: config
+              mountPath: /etc/gitea
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: config
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea-http
+  namespace: gitea
+  labels:
+    app: gitea
+spec:
+  selector:
+    app: gitea
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tester
+  namespace: gitea
+  labels:
+    app: tester
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tester
+  template:
+    metadata:
+      labels:
+        app: tester
+    spec:
+      containers:
+        - name: tester
+          image: nicolaka/netshoot:v0.13
+          command: ["sh", "-c", "while true; do sleep 30; done"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: registry
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: registry
+  labels:
+    app: registry
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+        - name: registry
+          image: registry:2.8.3
+          ports:
+            - name: http
+              containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /v2/
+              port: http
+            periodSeconds: 5
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/registry
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: registry
+  labels:
+    app: registry
+spec:
+  selector:
+    app: registry
+  ports:
+    - name: http
+      port: 5000
+      targetPort: http
+---
+# regctl copies podinfo tags from ghcr.io into the lab registry. The lab
+# registry has no TLS, so the container marks it as plain HTTP once at start.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-tools
+  namespace: registry
+  labels:
+    app: registry-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry-tools
+  template:
+    metadata:
+      labels:
+        app: registry-tools
+    spec:
+      containers:
+        - name: regctl
+          image: regclient/regctl:v0.11.6-alpine
+          command:
+            - sh
+            - -c
+            - regctl registry set --tls disabled registry.localtest.me:5000 && while true; do sleep 30; done

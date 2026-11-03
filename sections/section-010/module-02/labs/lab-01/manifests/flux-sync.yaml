@@ -1,0 +1,27 @@
+# The Flux objects that connect the cluster to the repository gitops/fleet.
+# The Secret fleet-auth is created by the bootstrap with `flux create secret git`.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: fleet
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: http://gitea.localtest.me:3000/gitops/fleet.git
+  ref:
+    branch: main
+  secretRef:
+    name: fleet-auth
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: fleet
+  namespace: flux-system
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: fleet
+  path: ./clusters/kind
+  prune: true

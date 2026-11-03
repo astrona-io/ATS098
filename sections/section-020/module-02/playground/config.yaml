@@ -1,0 +1,30 @@
+# Release Commits And Helm Values (PLAYGROUND) — Playground environment
+# A clean sandbox: it spins up, runs OS prep, then stays running for free
+# exploration. No task, no grading, no `astrona submit`.
+# Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-098-playground-020-02"
+  docs:
+    guide: "docs/overview.md"
+bootstrap:
+  init:
+    - name: "prepare"
+      description: "Install the Flux CLI 2.9.6, start Gitea and the lab registry, install Flux with the image controllers, add the image tags and connect Flux to gitops/fleet."
+      type: "file"
+      source: "bootstrap/prepare.sh"
+  manifests:
+    - name: "lab-start"
+      description: "Starting workloads (Gitea, tester, the lab registry and registry-tools)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+teardown:
+  keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.14.0
+      - gitea/gitea:28.2.0-rootless
+      - nicolaka/netshoot:v0.13
+      - regclient/regctl:v0.11.6-alpine
+      - registry:2.8.3

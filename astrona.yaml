@@ -104,6 +104,90 @@ modules:
         path: sections/section-010/module-01/course-04-summary.md
 
       - type: reading
+        title: "Authenticate To A Private Registry"
+        path: sections/section-010/module-02/course.md
+      - type: reading
+        title: "How The Reflector Authenticates"
+        path: sections/section-010/module-02/course-01-how-the-reflector-authenticates.md
+      - type: reading
+        title: "Credentials With secretRef"
+        path: sections/section-010/module-02/course-02-credentials-with-secretref.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Scan A Private Registry Lab"
+        path: sections/section-010/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: image-scanning
+        task_kind: troubleshooting
+        tags: [imagerepository, secretref, docker-registry, private-registry, authentication, flux-get]
+        learning_goals:
+          - Read the authentication error of a failed scan and find the missing credentials
+          - Create a registry login Secret and reference it from the ImageRepository in Git
+          - Prove the policy follows new tags in a registry that needs a login
+        resources:
+          - name: "ImageRepository API: secretRef"
+            url: https://fluxcd.io/flux/components/image/imagerepositories/
+          - name: "Flux CLI: flux create secret oci"
+            url: https://fluxcd.io/flux/cmd/flux_create_secret_oci/
+      - type: reading
+        title: "Service Accounts And Shared Credentials"
+        path: sections/section-010/module-02/course-03-service-accounts-and-shared-credentials.md
+      - type: reading
+        title: "Cloud Registries, TLS And Proxies"
+        path: sections/section-010/module-02/course-04-cloud-registries-tls-and-proxies.md
+      - type: reading
+        title: "Diagnosing Authentication Errors"
+        path: sections/section-010/module-02/course-05-diagnosing-authentication-errors.md
+      - type: reading
+        title: Summary
+        path: sections/section-010/module-02/course-06-summary.md
+
+      - type: reading
+        title: "Choose Tags With Ranges And Digests"
+        path: sections/section-010/module-03/course.md
+      - type: reading
+        title: "Semantic Version Ranges"
+        path: sections/section-010/module-03/course-01-semantic-version-ranges.md
+      - type: reading
+        title: "Release Candidates In A Range"
+        path: sections/section-010/module-03/course-02-release-candidates-in-a-range.md
+      - type: reading
+        title: "Reflecting Image Digests"
+        path: sections/section-010/module-03/course-03-reflecting-image-digests.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Follow Release Candidates And Reflect Digests Lab"
+        path: sections/section-010/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: image-policies
+        task_kind: troubleshooting
+        tags: [imagepolicy, semver, prerelease, digest-reflection, reflection-interval, flux-get]
+        learning_goals:
+          - Find why a range skips release candidates and why the digest never changes
+          - Write a range with pre-release parts and turn on digest reflection with an interval in Git
+          - Prove the policy follows the newest release candidate, moves to a stable release and ignores the next major version
+        resources:
+          - name: "ImagePolicy API: digestReflectionPolicy"
+            url: https://fluxcd.io/flux/components/image/imagepolicies/
+          - name: "ImagePolicy API: semver"
+            url: https://fluxcd.io/flux/components/image/imagepolicies/
+      - type: reading
+        title: "Scan And Reflection Timing"
+        path: sections/section-010/module-03/course-04-scan-and-reflection-timing.md
+      - type: reading
+        title: "Reading Status And Troubleshooting Policies"
+        path: sections/section-010/module-03/course-05-reading-status-and-troubleshooting-policies.md
+      - type: reading
+        title: Summary
+        path: sections/section-010/module-03/course-06-summary.md
+
+      - type: reading
         title: Question
         path: sections/section-010/capstone/labs/lab-01/question.md
       - type: lab
@@ -178,6 +262,89 @@ modules:
       - type: reading
         title: Summary
         path: sections/section-020/module-01/course-04-summary.md
+
+      - type: reading
+        title: "Release Commits And Helm Values"
+        path: sections/section-020/module-02/course.md
+      - type: reading
+        title: "Setter Markers In Helm Values"
+        path: sections/section-020/module-02/course-01-setter-markers-in-helm-values.md
+      - type: reading
+        title: "Pinning Images By Digest"
+        path: sections/section-020/module-02/course-02-pinning-images-by-digest.md
+      - type: reading
+        title: "Update Paths And The Setters Strategy"
+        path: sections/section-020/module-02/course-03-update-paths-and-the-setters-strategy.md
+      - type: reading
+        title: "Commit Message Templates"
+        path: sections/section-020/module-02/course-04-commit-message-templates.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Describe Releases In Commit Messages Lab"
+        path: sections/section-020/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: image-automation
+        task_kind: build
+        tags: [imageupdateautomation, commit-template, changed-changes, git-write-back, flux-reconcile]
+        learning_goals:
+          - Change the author of the automation in Git
+          - Write a message template that lists the old and the new value of every change
+          - Prove a release commit names the old tag and the new tag
+        resources:
+          - name: "ImageUpdateAutomation API"
+            url: https://fluxcd.io/flux/components/image/imageupdateautomations/
+          - name: "Automate image updates to Git"
+            url: https://fluxcd.io/flux/guides/image-update/
+      - type: reading
+        title: "Signing Commits And Push Options"
+        path: sections/section-020/module-02/course-05-signing-commits-and-push-options.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-02/course-06-summary.md
+      - type: reading
+        title: "Operate And Debug Image Automation"
+        path: sections/section-020/module-03/course.md
+      - type: reading
+        title: "Reading The State Of The Image Objects"
+        path: sections/section-020/module-03/course-01-reading-the-state-of-the-image-objects.md
+      - type: reading
+        title: "Tracing A Release"
+        path: sections/section-020/module-03/course-02-tracing-a-release.md
+      - type: reading
+        title: "Suspending And Resuming Automation"
+        path: sections/section-020/module-03/course-03-suspending-and-resuming-automation.md
+      - type: reading
+        title: "Alerts And Providers For Image Events"
+        path: sections/section-020/module-03/course-04-alerts-and-providers-for-image-events.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Alert On Image Updates Lab"
+        path: sections/section-020/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: image-automation
+        task_kind: troubleshooting
+        tags: [imageupdateautomation, suspend, alert, provider, flux-get, flux-events]
+        learning_goals:
+          - Find why an automation does not commit and fix it in Git
+          - Send the events of the image objects to a Provider with an Alert
+          - Prove a new tag reaches main through a commit by the automation
+        resources:
+          - name: "Flux notification controller: Alerts"
+            url: https://fluxcd.io/flux/components/notification/alerts/
+          - name: "ImageUpdateAutomation API"
+            url: https://fluxcd.io/flux/components/image/imageupdateautomations/
+      - type: reading
+        title: "Common Failure Causes"
+        path: sections/section-020/module-03/course-05-common-failure-causes.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-03/course-06-summary.md
 
       - type: reading
         title: Question
@@ -257,6 +424,90 @@ modules:
       - type: reading
         title: Summary
         path: sections/section-030/module-01/course-04-summary.md
+
+      - type: reading
+        title: "Choose A Deployment Strategy In Flagger"
+        path: sections/section-030/module-02/course.md
+      - type: reading
+        title: "Flagger Providers And Installation"
+        path: sections/section-030/module-02/course-01-flagger-providers-and-installation.md
+      - type: reading
+        title: "Canary Release Steps And Autoscaling"
+        path: sections/section-030/module-02/course-02-canary-release-steps-and-autoscaling.md
+      - type: reading
+        title: "A/B Testing With Headers And Cookies"
+        path: sections/section-030/module-02/course-03-ab-testing-with-headers-and-cookies.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Switch A Release To A/B Testing With A Header Lab"
+        path: sections/section-030/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: progressive-delivery
+        task_kind: build
+        tags: [flagger, canary, ab-testing, header-match, ingress-nginx, kustomization]
+        learning_goals:
+          - Change a weighted Canary into an A/B test that matches a header
+          - Release a new podinfo version through Git and follow the iterations
+          - Prove the canary was promoted and the primary runs the new version
+        resources:
+          - name: "Flagger: deployment strategies"
+            url: https://docs.flagger.app/usage/deployment-strategies
+          - name: "Flagger: NGINX canary deployments"
+            url: https://docs.flagger.app/tutorials/nginx-progressive-delivery
+      - type: reading
+        title: "Blue/Green And Traffic Mirroring"
+        path: sections/section-030/module-02/course-04-blue-green-and-traffic-mirroring.md
+      - type: reading
+        title: "Reading The Canary Status"
+        path: sections/section-030/module-02/course-05-reading-the-canary-status.md
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-02/course-06-summary.md
+
+      - type: reading
+        title: "Judge Releases With Metrics, Webhooks And Alerts"
+        path: sections/section-030/module-03/course.md
+      - type: reading
+        title: "Built-In Metrics And MetricTemplates"
+        path: sections/section-030/module-03/course-01-built-in-metrics-and-metrictemplates.md
+      - type: reading
+        title: "Writing And Testing Prometheus Queries"
+        path: sections/section-030/module-03/course-02-writing-and-testing-prometheus-queries.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Gate A Release On A Custom Latency Metric Lab"
+        path: sections/section-030/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: progressive-delivery
+        task_kind: build
+        tags: [flagger, metrictemplate, prometheus, canary-analysis, latency, kustomization]
+        learning_goals:
+          - Write a MetricTemplate with a Prometheus latency query
+          - Add the template as a check to the Canary and release through Git
+          - Prove the canary passed the check and was promoted
+        resources:
+          - name: "Flagger: metrics analysis"
+            url: https://docs.flagger.app/usage/metrics
+          - name: "Flagger: webhooks"
+            url: https://docs.flagger.app/usage/webhooks
+      - type: reading
+        title: "Webhooks And Gates"
+        path: sections/section-030/module-03/course-03-webhooks-and-gates.md
+      - type: reading
+        title: "Alerts And Alert Providers"
+        path: sections/section-030/module-03/course-04-alerts-and-alert-providers.md
+      - type: reading
+        title: "Troubleshooting A Failing Release"
+        path: sections/section-030/module-03/course-05-troubleshooting-a-failing-release.md
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-03/course-06-summary.md
 
       - type: reading
         title: Question

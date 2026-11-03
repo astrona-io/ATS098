@@ -1,0 +1,25 @@
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+metadata:
+  name: image-events
+  namespace: flux-system
+spec:
+  type: generic
+  address: http://event-sink.flux-system.svc.cluster.local:8080/
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: image-updates
+  namespace: flux-system
+spec:
+  providerRef:
+    name: image-events
+  eventSeverity: info
+  eventSources:
+    - kind: ImageRepository
+      name: podinfo
+    - kind: ImagePolicy
+      name: podinfo
+    - kind: ImageUpdateAutomation
+      name: podinfo
