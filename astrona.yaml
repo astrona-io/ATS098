@@ -13,7 +13,7 @@
 training:
   id: ATS098
   title: "FluxCD: Image Automation & Progressive Delivery"
-  maturity: draft
+  maturity: alpha
   description: >
     Training material covering the Image Automation & Progressive Delivery
     domain of the FluxCD training path: scanning container registries with
