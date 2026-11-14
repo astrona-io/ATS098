@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://astrona.io/courses/fluxcd">
+    <img src="https://astrona.io/courses/fluxcd/domains/ATS098.svg" alt="ATS098: Image Automation & Progressive Delivery, part of the FluxCD course on Astrona" width="100%">
+  </a>
+</p>
+
 # ATS098 — Image Automation & Progressive Delivery (FluxCD)
 
 Course material for the **Image Automation & Progressive Delivery** domain of
